@@ -158,7 +158,7 @@
     \item Shattered Gradients 
       \begin{itemize}
         \item non-differentiable operation (\textit{nonexistent})
-        \item provide \textit{incorrect} gradient to make adversary stuck in local minima
+        \item provide \textit{incorrect} gradient to make adversary stuck in local
       \end{itemize}
     \item Random Gradients
         \begin{itemize}
@@ -207,9 +207,9 @@
 \begin{frame}{Some Highlights}
   \begin{itemize}
     \item Prove trade-off between standard accuracy and robustness \\
-      Is adv. training $\in$ Data Augmentation?
+      Is adversarial training $\in$ Data Augmentation?
     \item Identify robust and non-robust features
-    \item Interpretable gradients thru adv. training
+    \item Interpretable gradients thru adversarial training
   \end{itemize}
 \end{frame}
 
@@ -264,9 +264,51 @@
 
 \begin{frame}{Some Thoughts}
   \begin{itemize}
-    \item By encoding appropriate prior into set of pertubations $\mathcal{S}$, adv. training can provide interpretable gradients 
+    \item By encoding appropriate prior into set of pertubations $\mathcal{S}$, adversarial training can provide interpretable gradients 
   \end{itemize}
 \end{frame}
+
+%\section{Interesting Facts on Vision}
+%\subsection{Approximating CNNs with Bag-of-local-Features models works surprisingly well on ImageNet}
+%\begin{frame}{Approximating CNNs with Bag-of-local-Features models}
+  %\includegraphics[width=\textwidth]{fig/p3/title.png}
+  %\center ICLR 2019
+%\end{frame}
+
+%\begin{frame}{Idea: Image Classification Task for Example}
+  %Use \textbf{patch} information of images independently (instead of whole image), then do majority voting to do image-level decision.
+%\end{frame}
+
+%\begin{frame}{Idea of BagNet}
+  %\center \includegraphics[width=0.7\textwidth]{fig/p3/idea.png}
+%\end{frame}
+
+%\begin{frame}{Difference between CNN}
+  %\begin{itemize}
+    %\item CNN: Aggregate low-level local features to global high-level information (見樹見林)
+    %\item BagNet: Consider local features independently (見樹不見林)
+  %\end{itemize}
+%\end{frame}
+
+%\begin{frame}{How does each frame look like}
+  %\center \includegraphics[width=\textwidth]{fig/p3/size.png}
+%\end{frame}
+
+%\begin{frame}{Accuracy}
+  %\center \includegraphics[width=0.7\textwidth]{fig/p3/acc.png}
+%\end{frame}
+
+
+%\begin{frame}{Some Thoughts}
+  %\begin{itemize}
+    %\item Is current task \textbf{difficult} enough to use global information?
+    %\item Better interpretability (W/ trading some accuracy)
+      %\begin{itemize}
+        %\item Each patch acts as unit in heatmap (ignoring background but focusing on shape and edge)
+        %\item Know why adversarial sample is misclassified
+      %\end{itemize}
+  %\end{itemize}
+%\end{frame}
 %\section{Elements}
 %\subsection{Fonts}
 %\begin{frame}[t]{Fonts}
