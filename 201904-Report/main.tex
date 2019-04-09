@@ -84,7 +84,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
     \item $S^L$ is training data in \texttt{meta-train}, also called \textit{support set}
     \item $B^L$ is testing data in \texttt{meta-train}
     \item $(S^L, B^L)$ is called \textit{task} in some literature
-    \item In this case, $\mathcal{A}_\theta$ is likelihood $P_\theta(y|x)$
+    \item In this case, $\mathcal{A}_\theta$ is $P_\theta(y|x)$
   \end{itemize}
 \end{frame}
 
@@ -98,7 +98,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Metric-based Approach}
-  What to share: \textbf{weight of feature encoder}
+  Meta-learn \textbf{weight of feature encoder}
   \[ P_\theta (y|x,S) = \sum_{(x,x_i) \in S} k_\theta (x,x_i) y_i \]
   \begin{itemize}
     \item $k_\theta$ is kernel function to measure similarity
@@ -114,7 +114,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Model-base Approach}
-  What to share: \textbf{strategy of r/w memory}
+  Meta-learn \textbf{strategy of r/w memory}
   \[ P_\theta(y|x,S) = f_\theta(x,S) \]
   \begin{itemize}
     \item Retrieve experiences learnt in support set to answer
@@ -123,11 +123,11 @@ $\mathcal{A}$ depends on which application we want to learn \\
       \item NTM-based: MANN (LRUA, surprise-based)
       \item Temporal Convolution: SNAIL (pretty brutal... )
     \end{itemize}
-  \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Optimization-based Approach}
-  What to share: optimizer, initial weight, hyper-param, \textbf{update rule}...
+  Meta-learner optimizer, initial weight, hyper-param, \textbf{update rule}...
   \begin{itemize}
     \item initial weight: MAML and its variant\\
       (PMAML, FOMAML $\rightarrow$ Reptile)
@@ -140,15 +140,15 @@ $\mathcal{A}$ depends on which application we want to learn \\
 
 \begin{frame}{Applications}
   \begin{itemize}
-    \item Few-shot classification
-    \item Reinforcement Learning
+    \item Few-Shot classification
+    \item Reinforcement learning
     \item Generative modeling: NMT (EMNLP 2018), TTS (ICLR 2019)
-    \item \textbf{Unsupervised Representation Learning}
+    \item \textbf{Unsupervised representation learning}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Desirable Properties}
-  Quote from Chelsea Finn's thesis
+  Quote from Chelsea Finn's PhD thesis
   \begin{itemize}
     \item Expressive power to represent ``learning algorithm''
     \item Generalization power
@@ -164,12 +164,74 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Motivation}
+  \begin{itemize}
+    \item Align objectives of unsupervised learning and human-specified downstream tasks
+    \item Tackle this problem via meta-learn \textbf{update rule}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Flow}
+  \center \includegraphics[width=0.7\textwidth]{fig/flow.png}
 \end{frame}
 
-\begin{frame}{Experiments}
+\begin{frame}{Flow}
+  \center \includegraphics[width=0.7\textwidth]{fig/flow-anno.png}
+  \begin{itemize}
+    \item base model: $\text{MLP}_{\phi}$, acted as feature extractor (output is $x^L$)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Flow - Meta Objective}
+  \begin{itemize}
+    \item What to learn: Fitting linear regression to labeled labeled data 
+    \item Each task in \texttt{meta-train}: $\lbrace x_i \rbrace_{\text{unlabeled}}, \lbrace (x_a,y_a) \rbrace_\text{train}, \lbrace (x_b,y_b) \rbrace_\text{test}$
+  \end{itemize}
+  
+  \begin{block}{Meta Objective}
+    \[ \hat{v} = \arg \min_v (||y_a - v^Tx_a^L||^2 + \lambda ||v||^2) \]
+    \[ \text{MetaObjective}(\phi) = \text{CosDist}(y_b,\hat{v}^Tx_b^L) \]
+  \end{block}
+  
+\end{frame}
+
+\begin{frame}{Flow - Learned Update Rule}
+\end{frame}
+
+\begin{frame}{Some Observation of Existing Representation Learning Algorithms}
+  \begin{itemize}
+    \item Objective function mismatch (e.g VAE)
+    \item Need for consistent data structure (e.g ProtoNet)
+  \end{itemize}
+  \center \includegraphics[width=\textwidth]{fig/obs.png}
+
+\end{frame}
+
+\begin{frame}{Experiments - Preprocessing}
+  \begin{itemize}
+    \item Permute inputs along feature dimension (Note: same permutation in each task)
+    \item \texttt{meta-train}: CIFAR10, ImageNet
+    \item \texttt{meta-test}: MNIST, Fashion MNIST, \textbf{IMDB}
+  \item \textbf{The paper haven't mention size of each task in experiments} \\
+    (their source code can only run eval) (?)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Generalization over datasets and domains}
+  \center \includegraphics[width=\textwidth]{fig/lc.png}
+\end{frame}
+
+\begin{frame}{Generalization over datasets and domains}
+  \center \includegraphics[width=\textwidth]{fig/mnist.png}
+\end{frame}
+
+\begin{frame}{Meta Overfitting}
+  \center \includegraphics[width=0.7\textwidth]{fig/meta-overfitting.png}
+  \begin{itemize}
+    \item It seems that feature shuffling still cannot solve :p
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Generalization over Network Architectures}
 \end{frame}
 
 \section{Comparison}
