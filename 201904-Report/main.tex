@@ -127,12 +127,17 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Optimization-based Approach}
-  Meta-learner optimizer, initial weight, hyper-param, \textbf{update rule}...
+  %Meta-learn optimizer, initial weight, hyper-param, \textbf{update rule}...
+  Meta-learn \textbf{hyper-param} (e.g optimizer, initial weights...)
+  \[ P_\theta(y|x,S) = f_{g_\theta(S)}(x) \]
   \begin{itemize}
-    \item initial weight: MAML and its variant\\
-      (PMAML, FOMAML $\rightarrow$ Reptile)
-    \item optimizer: LSTM Meta-Learner
-    \item update rule: Today's paper
+    \item Implementation: via gradients 
+      \begin{itemize}
+        \item initial weight: MAML and its variant\\
+          (PMAML, FOMAML $\rightarrow$ Reptile)
+        \item optimizer: LSTM Meta-Learner
+        \item update rule: Today's paper
+      \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -183,7 +188,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
 
 \begin{frame}{Flow - Meta Objective}
   \begin{itemize}
-    \item What to learn: Fitting linear regression to labeled labeled data 
+    \item What to learn: Fitting linear regression to limited labeled data 
     \item Each task in \texttt{meta-train}: $\lbrace x_i \rbrace_{\text{unlabeled}}, \lbrace (x_a,y_a) \rbrace_\text{train}, \lbrace (x_b,y_b) \rbrace_\text{test}$
   \end{itemize}
   
@@ -197,7 +202,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \begin{frame}{Flow - Learned Update Rule}
 \end{frame}
 
-\begin{frame}{Some Observation of Existing Representation Learning Algorithms}
+\begin{frame}{Observations of Existing Representation Learning Algorithms}
   \begin{itemize}
     \item Objective function mismatch (e.g VAE)
     \item Need for consistent data structure (e.g ProtoNet)
@@ -240,6 +245,23 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \begin{frame}
   \includegraphics[width=\textwidth]{fig/ULML.png}
   \center ICLR 2019
+\end{frame}
+
+\begin{frame}
+  \includegraphics[width=\textwidth]{fig/ULML-flow.png}
+  \textit{(source: 茅耀文's paper intro on 2019/01)}
+\end{frame}
+
+\begin{frame}{Difference}
+  \begin{itemize}
+    \item Assign labels through clustering (\textit{Automatic Task Construction}) as \texttt{meta-learn}
+    %\item Meta-learn \textbf{parameters of embedding algorithm} // this is wrong!!
+    %\item Learned representation has geometic semantics (depend on clustering)
+    \item \textbf{Unsupervised Meta Learning} - since we didn't optimize the embedding algorithm \\
+      (We use embedding $z \in \mathcal{Z}$ only because of its possible semantics which doesn't appear in raw input space $x \in \mathcal{X}$)
+  \end{itemize}
+  %\center \textbf{Unsupervised Meta Learning}\\
+  %since we didn't optimize the embedding algorithm
 \end{frame}
 
 \subsection{LSTM Meta-Learner}
