@@ -114,13 +114,13 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Model-base Approach}
-  Meta-learn \textbf{strategy of r/w memory}
+  Meta-learn \textbf{strategy of using $S$}
   \[ P_\theta(y|x,S) = f_\theta(x,S) \]
   \begin{itemize}
     \item Retrieve experiences learnt in support set to answer
     \item Implementation: via external memory (e.g NTM), fusing $S$ (e.g convolution)
     \begin{itemize}
-      \item NTM-based: MANN (LRUA, surprise-based)
+      \item NTM-based: MANN (LRUA, surprise-based) thru r/w weights
       \item Temporal Convolution: SNAIL (pretty brutal... )
     \end{itemize}
 \end{itemize}
@@ -200,6 +200,26 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Flow - Learned Update Rule}
+  Hightlight
+  \begin{itemize}
+    \item neuron-local, function of \textbf{pre-} and \textbf{post-} synaptic neurons
+    \item defined for any base model structure
+  \end{itemize}
+  %Notation
+  %\begin{itemize}
+    %\item 
+  %\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \center \includegraphics[width=0.7\textwidth]{fig/update-rule.png}
+  \begin{itemize}
+    \item base model $\phi = \lbrace W^1,b^1,V^1,\cdots,W^L,b^L,V^L \rbrace$
+    \item $\triangle W_{ij}^L = \text{func}(h_i^l,h_j^{l-1}, W_{ij})$
+    \item $h_i^l = \text{MLP}_\theta(x^l_i,z_i^l,V^{l+1},\delta^{l+1})$
+    \item $z^l = \text{BatchNorm}(x^{l-1}W^l) + b^l$, $x^l = \text{ReLU}(z^l)$
+    \item $\delta_i^l = \text{func}(h_i^l)$
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Observations of Existing Representation Learning Algorithms}
@@ -257,7 +277,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
     \item Assign labels through clustering (\textit{Automatic Task Construction}) as \texttt{meta-learn}
     %\item Meta-learn \textbf{parameters of embedding algorithm} // this is wrong!!
     %\item Learned representation has geometic semantics (depend on clustering)
-    \item \textbf{Unsupervised Meta Learning} - since we didn't optimize the embedding algorithm \\
+    \item \textbf{Unsupervised Meta Learning} - since we didn't optimize the embedding algorithm actually\\
       (We use embedding $z \in \mathcal{Z}$ only because of its possible semantics which doesn't appear in raw input space $x \in \mathcal{X}$)
   \end{itemize}
   %\center \textbf{Unsupervised Meta Learning}\\
@@ -270,7 +290,22 @@ $\mathcal{A}$ depends on which application we want to learn \\
   \center ICLR 2017
 \end{frame}
 
-\section{Future Work}
+\begin{frame}{Idea}
+  \begin{itemize}
+    \item SGD: $\theta_{t} = \theta_{t-1} - \alpha_t \nabla_{\theta_{t-1}} \mathcal{L}_t$
+    \item LSTM update rule for cell state: $c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t$
+    \item parametrize $i_t$ (and $f_t$) as meta-learner \\ 
+      \quad \quad (function of $\nabla_{\theta_{t-1}}\mathcal{L}_t, \mathcal{L}_t, \theta_{t-1}, i_{t-1})$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Difference}
+  \begin{itemize}
+    \item It's similar actually, both of them meta-learn ``how to update param''
+    \quad \quad Contribution of ``Meta-learn update rules'' is the proposed \textbf{unsupervised learning framework}
+    \item Need to explicitly handle the magnitude difference of different params
+  \end{itemize}
+\end{frame}
 
 \section{MISC}
 \begin{frame}
