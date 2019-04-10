@@ -47,8 +47,6 @@
 \date{2019/04/10}
 \begin{document}
 
-
-
 \begin{frame}
 \maketitle
 \end{frame}
@@ -87,15 +85,15 @@ $\mathcal{A}$ depends on which application we want to learn \\
 
   \begin{itemize}
     \item sample subset of label $L \subset \mathcal{L}$ to split \texttt{meta-train}, \texttt{meta-test}
-    \item $S^L$ is training data in \texttt{meta-train}, also called \textit{support set}
-    \item $B^L$ is testing data in \texttt{meta-train}
-    \item $(S^L, B^L)$ is called \textit{task} in some literature
+    \item One task: $(S^L, B^L)$ 
+    \item $S^L$ is training data, also called \textit{support set}
+    \item $B^L$ is testing data
     \item In this case, $\mathcal{A}_\theta$ is $P_\theta(y|x)$
   \end{itemize}
 \end{frame}
 
 \subsection{Common Approaches}
-\begin{frame}{Common Approaches}
+\begin{frame}{Common Approaches\footnote{source: \href{http://metalearning-symposium.ml/files/vinyals.pdf}{Vinyals' talk at NIPS 2017}}}
   \begin{itemize}
     \item Metric-based
     \item Model-based
@@ -112,10 +110,10 @@ $\mathcal{A}$ depends on which application we want to learn \\
     \item Implementation: via \textbf{model structure design}
       \begin{itemize}
         \item Conv. Siamse NN ($\rightarrow$ Relation Network)
-        \item Matching Network
+        %\item Matching Network
         \item Prototypical Network
       \end{itemize}
-    \item As far as I know, limited application in classification only
+    %\item As far as I know, limited application in classification only
   \end{itemize}
 \end{frame}
 
@@ -140,7 +138,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
     \item Implementation: via gradients 
       \begin{itemize}
         \item initial weight: MAML and its variant\\
-          (PMAML, FOMAML $\rightarrow$ Reptile)
+          (PMAML, FOMAML $\rightarrow$ Reptile, MAML++)
         \item optimizer: LSTM Meta-Learner
         \item update rule: Today's paper
       \end{itemize}
@@ -183,13 +181,18 @@ $\mathcal{A}$ depends on which application we want to learn \\
 
 \begin{frame}{Flow}
   \center \includegraphics[width=0.7\textwidth]{fig/flow.png}
+  \begin{itemize}
+    \item Each task in \texttt{meta-train}: $\lbrace x_i \rbrace_{\text{unlabeled}}, \lbrace (x_a,y_a) \rbrace_\text{train}, \lbrace (x_b,y_b) \rbrace_\text{test}$
+    \item base model: $\text{MLP}_{\phi}$, acted as feature encoder (output is $x^L$)
+  \end{itemize}
+    
 \end{frame}
 
 \begin{frame}{Flow}
-  \center \includegraphics[width=0.7\textwidth]{fig/flow-anno.png}
-  \begin{itemize}
-    \item base model: $\text{MLP}_{\phi}$, acted as feature extractor (output is $x^L$)
-  \end{itemize}
+  \center \includegraphics[width=0.8\textwidth]{fig/flow-anno.png}
+  %\begin{itemize}
+    %\item base model: $\text{MLP}_{\phi}$, acted as feature extractor (output is $x^L$)
+  %\end{itemize}
 \end{frame}
 
 \begin{frame}{Flow - Meta Objective}
@@ -208,8 +211,8 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \begin{frame}{Flow - Learned Update Rule}
   Hightlight
   \begin{itemize}
-    \item neuron-local, function of \textbf{pre-} and \textbf{post-} synaptic neurons
     \item defined for any base model structure
+    \item neuron-local, function of \textbf{pre-} and \textbf{post-} synaptic neurons
   \end{itemize}
   %Notation
   %\begin{itemize}
@@ -221,10 +224,10 @@ $\mathcal{A}$ depends on which application we want to learn \\
   \center \includegraphics[width=0.7\textwidth]{fig/update-rule.png}
   \begin{itemize}
     \item base model $\phi = \lbrace W^1,b^1,V^1,\cdots,W^L,b^L,V^L \rbrace$
-    \item $\triangle W_{ij}^L = \text{func}(h_i^l,h_j^{l-1}, W_{ij})$
-    \item $h_i^l = \text{MLP}_\theta(x^l_i,z_i^l,V^{l+1},\delta^{l+1})$
     \item $z^l = \text{BatchNorm}(x^{l-1}W^l) + b^l$, $x^l = \text{ReLU}(z^l)$
     \item $\delta_i^l = \text{func}(h_i^l)$
+    \item $h_i^l = \text{MLP}_\theta(x^l_i,z_i^l,V^{l+1},\delta^{l+1})$
+    \item $\triangle W_{ij}^L = \text{func}(h_i^l,h_j^{l-1}, W_{ij})$
   \end{itemize}
 \end{frame}
 
@@ -248,7 +251,8 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Generalization over datasets and domains}
-  \center \includegraphics[width=\textwidth]{fig/lc.png}
+  \center \includegraphics[width=\textwidth]{fig/lc.png} \\
+  \texttt{meta-train}: CIFAR10, ImageNet
 \end{frame}
 
 \begin{frame}{Generalization over datasets and domains}
@@ -263,9 +267,13 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}{Generalization over Network Architectures}
+  \center \includegraphics[width=\textwidth]{fig/net-arch.png}
+  \begin{itemize}
+    \item train network with 2-5 layers and 64-512 units per layer
+  \end{itemize}
 \end{frame}
 
-\section{Comparison}
+\section{Comparison \& Conclusion}
 \subsection{Unsupervised Learning via Meta-Learning}
 
 \begin{frame}
@@ -274,17 +282,18 @@ $\mathcal{A}$ depends on which application we want to learn \\
 \end{frame}
 
 \begin{frame}
+  \footnote{source: 茅耀文's paper intro on 2019/01}
   \includegraphics[width=\textwidth]{fig/ULML-flow.png}
-  \textit{(source: 茅耀文's paper intro on 2019/01)}
 \end{frame}
 
-\begin{frame}{Difference}
+\begin{frame}{Difference \& Conclusion}
   \begin{itemize}
-    \item Assign labels through clustering (\textit{Automatic Task Construction}) as \texttt{meta-learn}
+    \item Assign labels through clustering (\textit{Automatic Task Construction}) to build tasks in \texttt{meta-train}
     %\item Meta-learn \textbf{parameters of embedding algorithm} // this is wrong!!
     %\item Learned representation has geometic semantics (depend on clustering)
-    \item \textbf{Unsupervised Meta Learning} - since we didn't optimize the embedding algorithm actually\\
+    \item \textbf{Meta Learning on unlabeled data} - since we didn't optimize the embedding algorithm actually\\
       (We use embedding $z \in \mathcal{Z}$ only because of its possible semantics which doesn't appear in raw input space $x \in \mathcal{X}$)
+    \item ``Meta-learn update rules'' learns more like what we expected
   \end{itemize}
   %\center \textbf{Unsupervised Meta Learning}\\
   %since we didn't optimize the embedding algorithm
@@ -305,11 +314,11 @@ $\mathcal{A}$ depends on which application we want to learn \\
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Difference}
+\begin{frame}{Difference \& Conclusion}
   \begin{itemize}
     \item It's similar actually, both of them meta-learn ``how to update param''
     \quad \quad Contribution of ``Meta-learn update rules'' is the proposed \textbf{unsupervised learning framework}
-    \item Need to explicitly handle the magnitude difference of different params
+    %\item Need to explicitly handle the magnitude difference of different params
   \end{itemize}
 \end{frame}
 
