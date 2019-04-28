@@ -123,6 +123,19 @@
   篇並沒有處理在沒有 loss 的情況下如何去 learn 這個 optimizer 。所以我覺得今天 report 這篇最主要的貢獻其實是在於他提供了一個 unsupervised learning 的 meta-earing 框架
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 * ULML 那篇 design 的 representation，因為有做 clustering 的關係，所以有幾何上的語義，而 learn update rule 那篇則沒有
 * ULML 在 meta-test 時，不會在 retrain representation，meta-test僅僅是K-shot
   training examples，然後test samples
