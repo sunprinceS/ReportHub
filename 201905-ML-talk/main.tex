@@ -41,10 +41,10 @@
   %\end{frame}
 %}
 
-\title{CS Seminar Report}
-\subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{Adversarial Attack/Defense in Machine Learning}}}
+\title{More on Adversarial Attack/Defense}
+%\subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{Adversarial Attack/Defense in Machine Learning}}}
 \author{徐瑞陽}
-\date{2019/04/29}
+\date{2019/05/16}
 \begin{document}
 
 
@@ -58,22 +58,7 @@
 \tableofcontents
 \end{frame}
 
-\section{Motivation}
-\begin{frame}{Motivation}
-  \begin{itemize}
-    \item We want to deploy ML classifiers in \textbf{real world}.
-    \item The classifiers that are robust to noises in nature and work ``most of the time'' is not sufficient
-    \item We want our model robust to the inputs built specifically to fool it
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{ML Model Are Accurate but Brittle}
-  \footnote{source: \href{http://metalearning-symposium.ml/files/vinyals.pdf}{Explaining and Harnessing Adversarial Examples, ICLR 2015}}
-  \includegraphics[width=\textwidth]{fig/idea.png}
-\end{frame}
-
-\section{Definition}
-\begin{frame}{Optimization View on Adversarial Robustness}
+\begin{frame}{Recap: Optimization View on Adversarial Robustness}
   \begin{block}{Objective}
     \[ \min_\theta \mathbb{E}_{(x,y) \sim \mathcal{D}}[\max_{\delta \sim \mathcal{S}}L(x+\delta,y|\theta)]\]
   \end{block}
@@ -82,55 +67,6 @@
     \item $\theta$: weights of classifier model
     \item $\mathcal{D}$: data distribution
     \item $L(\cdot)$: loss function
-  \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Allowed Pertubations of Adversary}
-  \begin{block}{Want}
-    $\delta$ is small (which depends on the application)
-  \end{block}
-  \begin{itemize}
-    \item $L_p$ norm $\leq \epsilon$
-      \begin{itemize}
-        \item $L_0$: \# of pixel can change
-        \item $L_2$: move within Euclidean ball with radius $\epsilon$
-        \item $L_\infty$: every pixel has $\epsilon$ budget to move around
-      \end{itemize}
-    \item Rotation or translation
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Amount of Information Adversary Had}
-    \begin{itemize}
-      \item White-Box: Adversary has \textbf{full-access} to the model (structure, weight)
-      \item Black-Box: Labels assigned by the \textbf{Oracle} for chosen input (e.g API call)
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Optimization Methods of Adversary}
-  How to find the most adversarial point within $\mathcal{S}$?
-  \begin{itemize}
-    \item Gradient (First Order Adversary), the most common one
-    \item Mixed Integer Programming \\
-      $\rightarrow$ \href{https://openreview.net/forum?id=HyGIdiRqtm}{Evaluating Robustness of Neural Networks with Mixed Integer Programming, ICLR2019}
-      
-    \item And more...
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{One Adversary Instance - FGSM}
-  \textit{Fast Gradient Sign Method \footnote{source: \href{http://metalearning-symposium.ml/files/vinyals.pdf}{Explaining and Harnessing Adversarial Examples, ICLR 2015}}} is an \color{blue}{$L_\infty\text{-bounded}$}  \color{purple}{first-order} \color{orange}{white-box} \color{black}{adversary}
-  
-  \[
-    \tilde{x} = x + \epsilon \, \texttt{sgn} \nabla_xL(x,y|\theta)
-  \]
-
-  Some variants as follows
-  \begin{itemize}
-    \item multi-step (possibly w/ projection)
-    \item ensemble
-    \item proxy model $\theta^\prime$ (black-box setting)
   \end{itemize}
 \end{frame}
 
@@ -147,8 +83,13 @@
 \begin{frame}{Trade-off of Adversarial Robustness}
   \begin{itemize}
     \item More training time
-    \item \textbf{Generalization accuracy drops} \footnote{source: \href{http://metalearning-symposium.ml/files/vinyals.pdf}{Robustness May be at Odds with Accuracy, ICLR 2019}}
+    \item \textbf{Generalization accuracy drops} 
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Robustness May Be At Odds With Accuracy}
+  \includegraphics[width=\textwidth]{fig/p2/title.png}
+  \center ICLR 2019
 \end{frame}
 
 \begin{frame}{Example: Binary Classification Task}
@@ -157,8 +98,8 @@
   We choose $\eta$ be large enough to separate these 2 distributions ($\eta = \Theta(1/\sqrt{d})$)  
 
   \begin{itemize}
-    \item $x_1$ is \textit{moderately correlated} with the label
-    \item $x_2 \sim x_{d+1}$ is \textit{very weakly correlated} with the label
+    \item $x_1$ is \textit{moderately correlated} with the label (say, $p=0.8$)
+    \item $x_2 \sim x_{d+1}$ is \textit{very weakly correlated} with the label ($p = 0.5 + \epsilon$)
   \end{itemize}
 \end{frame}
 
@@ -231,22 +172,121 @@
 (w/ decreasing relation between label, calculated thru $\mathbb{E}_{(x,y) \sim \mathcal{D}}[yx_i]$)
 \end{frame}
 
+%\begin{frame}{Some Lessons}
+  %As more features are incorporated into the training, the standard accuracy is improved at the cost of robustness
+%\end{frame}
 
-\begin{frame}{Experiments: Multi-class classification}
-  \center{\includegraphics[width=\textwidth]{fig/exp.png}}\\
+
+\begin{frame}{Intepretable Gradients: What is robust feature}
+  The feature learned during adversarial training is invariant to pertubations.\\
+  Loss gradients in the input space align well with human eyes
+  \includegraphics[width=\textwidth]{fig/p2/int-grad.png}
 \end{frame}
 
-\section{Other Interesting Aspects}
-\begin{frame}{Other Interesting Aspects}
+\begin{frame}{Adversarial Examples: Which input will fool the model}
+  \includegraphics[width=\textwidth]{fig/p2/adv-sample.png}
+\end{frame}
+
+
+\section{Obfuscated Gradients Give a False Sense of Security}
+\begin{frame}{Obfuscated Gradients Give a False Sense of Security}
+  \includegraphics[width=\textwidth]{fig/ob-grad/ob-grad-title.png}
+  \center ICML 2018
+\end{frame}
+
+\begin{frame}{Some Highlights}
   \begin{itemize}
-    \item Transferability of adversarial examples
-      \begin{itemize}
-        \item Intra-technique: That's why black box attack still works well
-        \item Cross-technique: e.g Decision Tree vs NN (even one is differentiable model, one is not)
-      \end{itemize}
-    \item Obfuscated gradients: Over-confidence of adversarial robustness (ICML2018)
+    \item Provide a method to identify so-called \textbf{Obfuscated Gradients}
+    \item Identify 7/9 of defenses proposed in ICLR 2018 succeed defensing by this pheonemon
+    \item \textbf{Provide simple algorithms to beat those defenses} \href{https://github.com/anishathalye/obfuscated-gradients}{$\rightarrow$ github}\\
+      (within pertubations $\mathcal{S}$ they claim they can defend under white-box setting)
   \end{itemize}
 \end{frame}
+
+\begin{frame}{It's Da Lian Time}
+  \includegraphics[width=\textwidth]{fig/ob-grad/table.png}
+\end{frame}
+
+\begin{frame}{Intuition of Obfuscated Gradients}
+  \includegraphics[width=\textwidth]{fig/ob-grad/effect-of-gradient-masking.png}
+
+  \textbf{Note}: $L(\hat{x},y|\theta)$ is still high within $\mathcal{S}$
+\end{frame}
+
+\begin{frame}{How to identify them}
+  \begin{itemize}
+    \item One-step attacks perform better that iterative attacks
+    \item Partial random-step attacks perform better
+    \item Black-box attacks perform better (see next slide)
+    \item Increasing pertubation budget $\epsilon$ doesn't increase success rate pretty much
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why black-box attack can perform better}
+  \includegraphics[width=\textwidth]{fig/ob-grad/black-box-attack.png}
+\end{frame}
+
+\begin{frame}{Types of Obfuscated Gradients}
+  \begin{itemize}
+    \item Shattered Gradients 
+      \begin{itemize}
+        \item non-differentiable operation (\textit{nonexistent})
+        \item provide \textit{incorrect} gradient to make adversary stuck in local
+      \end{itemize}
+    \item Random Gradients
+        \begin{itemize}
+          \item randomize the network
+          \item add some random processing to input
+        \end{itemize}
+      %\item Exploding/Vanishing Gradients (?)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Proposed Attack Algorithms}
+  \begin{itemize}
+    \item Backward Pass Differentiable Approximation (\textit{BPDA})
+      \begin{itemize}
+        \item Circumvent shattered gradients
+        \item $\nabla_xf(g(x))|_{x = \hat{x}} \approx \nabla_xf(x)|_{x = g(\hat{x})}$
+      \end{itemize}
+
+    \item Expectation over Transformations (\textit{EOT})
+      \begin{itemize}
+        \item Circumvent random gradients
+        \item $\nabla\mathbb{E}_{t \sim T}f(t(x)) = \mathbb{E}_{t \sim T} \nabla f(t(x))$
+        \item In brief, ensemble
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Some Lesson}
+  \begin{itemize}
+    \item Succeed attack algorithm can be used as defense algorithm \\
+      (thru adversarial training using these samples)
+    \item No free lunch, additional cost of
+      \begin{itemize}
+        \item calculate $g(\cdot)$ many steps
+        \item parallel computation cost of ensemble
+        \item generalization accuracy (just mentioned before)
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+%\begin{frame}{Experiments: Multi-class classification}
+  %\center{\includegraphics[width=\textwidth]{fig/exp.png}}\\
+%\end{frame}
+
+
+%\section{Other Interesting Aspects}
+%\begin{frame}{Other Interesting Aspects}
+  %\begin{itemize}
+    %\item Transferability of adversarial examples
+      %\begin{itemize}
+        %\item Intra-technique: That's why black box attack still works well
+        %\item Cross-technique: e.g Decision Tree vs NN (even one is differentiable model, one is not)
+      %\end{itemize}
+    %\item Obfuscated gradients: Over-confidence of adversarial robustness (ICML2018)
+  %\end{itemize}
+%\end{frame}
 
 \begin{frame}
   \begin{center}
