@@ -57,7 +57,7 @@
 \end{frame}
 
 
-\section{Meta Learning}
+\section{Transferring Knowledge Across Learning Process}
 \begin{frame}
   \includegraphics[width=\textwidth]{fig/p1-title.png}
   \center ICLR 2019
@@ -132,24 +132,123 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{時光屋}
+\begin{frame}{After...}
   \begin{itemize}
     \item Combine second constraint into distance metric
     \item Approximate Jacobian matrix of $\theta^0$ as Identity matrix
+    \item The new derived initial weight $\theta^0$ will used as $\psi_\tau^0$ in the following iteration
     \item And some approximations...
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Meta gradient}
   \[
-    \nabla F(\theta^0) = \mathbb{E}_{\tau \sim p(\tau)} \Big [\, \sum_{i=0}^{K_\tau - 1} \Delta f_\tau^i \nabla f_\tau(\theta_\tau^i) + \Delta \theta_\tau^i \Big]\,
+    \nabla F(\theta^0) = \mathbb{E}_{\tau \sim p(\tau)} \Big [\, \sum_{i=0}^{K_\tau - 1} (\Delta f_\tau^i \nabla f_\tau(\theta_\tau^i) + \Delta \theta_\tau^i ) \Big]\,
   \]
 
+  Comparison:
   \begin{itemize}
     \item FOMAML: $\mathbb{E}_{\tau \sim p(\tau)} \Big [\, \nabla f_\tau(\theta^{K_\tau -1}_\tau) \Big ]\,$ 
     \item Reptile: $\mathbb{E}_{\tau \sim p(\tau)} \Big [\, \sum_{i=0}^{K_\tau - 1} \Delta \theta_\tau^i \Big ]\,$
   \end{itemize}
 \end{frame}
+
+\begin{frame}{Experiment on Multi-CV}
+  Consider set of CV datasets as distinct tasks (Face, MNIST, NotMNIST, Cifar10, Traffic Sign, SVHN...), then pretrain on all but one held-out task.\\ 
+  $\quad$\\ 
+  In meta-training, we train on each task for one epoch.\\
+  The following value in the table means error rate.
+\end{frame}
+
+\begin{frame}{Experiment on Multi-CV}
+  \includegraphics[width=\textwidth]{fig/p1-MultiCV.png}
+\end{frame}
+
+\begin{frame}{Observation - Finetuning is worse than no-pretraining?}
+  Pretraining on all other tasks available sometimes are not good
+
+  \begin{itemize}
+    \item Need to solve both new task and retain high performance on previous tasks (the latter acted as \textbf{regularization})
+    \item A single model encode both task-generic and task-specific information,
+      it must either saturate or grow in size
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Some thoughts}
+  \begin{itemize}
+    \item Large-scale meta-learning mentioned in this paper is more suitable for speech-related applications(e.g ASR, TTS)
+    \item If we still want to use fine-tuning to improve performance under low-resource scenerio, which source tasks we should choose? 
+  \end{itemize}
+\end{frame}
+
+\section{Massively Multilingual Adversarial Speech Recognition}
+\begin{frame}
+  \includegraphics[width=\textwidth]{fig/p2-title.png}
+  \center NAACL 2019
+\end{frame}
+
+\begin{frame}{In brief}
+  Pretraining on multilingual corpus as initial weight, then adapt to target languages (which usually low-resource)
+\end{frame}
+
+\begin{frame}{Highlight}
+  \begin{itemize}
+    \item Pretrained corpus contain \textbf{100} languages
+    \item Experiment and analyze relative importance of similarity between pretraining and target languages
+    \item \textit{(not so novel)} Both grapheme and phoneme objective
+    \item \textit{(not so novel)} lanugage-adversarial pretraining
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Model Architecture}
+  \center \includegraphics[width=0.6\textwidth]{fig/p2-arch.png}
+\end{frame}
+
+\begin{frame}{Experiment}
+  Corpus: CMU Wilderness
+  \begin{itemize}
+    \item Reading of Bible (with BGM)
+    \item Over \textbf{700} languages
+    \item Each contains around 20 hours sentence-lengthed audio with transcriptions
+  \end{itemize}
+  Setting
+  \begin{itemize}
+    \item Reading Adaptation: adapt to target languages and target speakers
+    \item Language Adaptation: adapt to target languages but \textbf{non-target} speakers\\
+      (I focus on this in the following)
+  \end{itemize}
+  %The difference is, when fine-tuning, whether we can use that speaker's reading as training data
+\end{frame}
+
+\begin{frame}{Features of Languages}
+  \begin{itemize}
+    \item Phonology (from URIEL Typological Database):
+      \begin{itemize}
+        \item Phonological feature vectors (from PHOIBLE)
+        \item Syntactic structure feature vectors (from WALS)
+      \end{itemize}
+    \item Geography: location on Earth
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Experiment}
+  \center \includegraphics[width=0.6\textwidth]{fig/p2-result.png}
+
+  \begin{itemize}
+    \item PHON, GEO: pretrained on top 7/14 languages which are PHON/GEO-similar
+    \item 100-LANG: pretrained on all available languages ($\approx$ 1650 hrs)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Exposure to more speech in pretraining is the most important thing\\
+      (should minimize the mismatch to unseen speaker)
+
+      \item BTW, CMU Wilderness is not available at the moment... 0w0
+  \end{itemize}
+\end{frame}
+
 
 \section{MISC}
 \begin{frame}
