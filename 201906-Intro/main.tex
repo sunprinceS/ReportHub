@@ -82,12 +82,12 @@
 
 \begin{frame}{Highlight}
   \begin{itemize}
-    \item New meta-objective
+    \item New meta-objective (to meta-learn better \textbf{initial weights})
     \item More realistic experiment settings
   \end{itemize}
 \end{frame}
 
-\begin{frame}{New meta-objective}
+\begin{frame}{New Meta-objective}
   \begin{itemize}
     \item The length of learning process is small
     \item The learning process is smooth
@@ -95,7 +95,7 @@
 
 \end{frame}
 
-\begin{frame}{New meta-objective}
+\begin{frame}{New Meta-objective}
   Minimize the travelling length in a task manifold $M$
 
   \begin{itemize}
@@ -110,7 +110,7 @@
 \end{frame}
 
 
-\begin{frame}{Some notation about learning process}
+\begin{frame}{Some Notation about Learning Process}
   \begin{itemize}
     \item learning process $\gamma$ is a curve on $M$
     \item $\gamma^i$ is the $i$-th point on $\gamma$ (discrete version)
@@ -119,7 +119,7 @@
 \end{frame}
 
 \begin{frame}
-  \begin{block}{Meta objective}
+  \begin{block}{Meta Objective}
   \[
     \theta^{\star} = \arg\min_{\theta^0} F(\theta^0) = \mathbb{E}_{\tau \sim p(\tau)} [\, d(\theta^0;M_\tau) ]\,
   \]
@@ -141,7 +141,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Meta gradient}
+\begin{frame}{Meta Gradient}
   \[
     \nabla F(\theta^0) = \mathbb{E}_{\tau \sim p(\tau)} \Big [\, \sum_{i=0}^{K_\tau - 1} (\Delta f_\tau^i \nabla f_\tau(\theta_\tau^i) + \Delta \theta_\tau^i ) \Big]\,
   \]
@@ -174,7 +174,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Some thoughts}
+\begin{frame}{Some Thoughts}
   \begin{itemize}
     \item Large-scale meta-learning mentioned in this paper is more suitable for speech-related applications(e.g ASR, TTS)
     \item If we still want to use fine-tuning to improve performance under low-resource scenerio, which source tasks we should choose? 
@@ -187,8 +187,8 @@
   \center NAACL 2019
 \end{frame}
 
-\begin{frame}{In brief}
-  Pretraining on multilingual corpus as initial weight, then adapt to target languages (which usually low-resource)
+\begin{frame}{In Brief}
+  Pretraining on multilingual corpus as initial weight, then adapt to target languages (which usually low-resource), and to see which criteria is important selecting pretraining languages
 \end{frame}
 
 \begin{frame}{Highlight}
@@ -205,9 +205,9 @@
 \end{frame}
 
 \begin{frame}{Experiment}
-  Corpus: CMU Wilderness
+  Corpus: CMU Wilderness (ICASSP 2019, from CMU)
   \begin{itemize}
-    \item Reading of Bible (with BGM)
+    \item Reading of Bible (with BGM), SR: 16kHz
     \item Over \textbf{700} languages
     \item Each contains around 20 hours sentence-lengthed audio with transcriptions
   \end{itemize}
@@ -215,18 +215,14 @@
   \begin{itemize}
     \item Reading Adaptation: adapt to target languages and target speakers
     \item Language Adaptation: adapt to target languages but \textbf{non-target} speakers\\
-      (I focus on this in the following)
+      (Focus on this in the following discussion)
   \end{itemize}
   %The difference is, when fine-tuning, whether we can use that speaker's reading as training data
 \end{frame}
 
 \begin{frame}{Features of Languages}
   \begin{itemize}
-    \item Phonology (from URIEL Typological Database):
-      \begin{itemize}
-        \item Phonological feature vectors (from PHOIBLE)
-        \item Syntactic structure feature vectors (from WALS)
-      \end{itemize}
+    \item Phonological feature vectors (from PHOIBLE)
     \item Geography: location on Earth
   \end{itemize}
 \end{frame}
@@ -247,6 +243,47 @@
 
       \item BTW, CMU Wilderness is not available at the moment... 0w0
   \end{itemize}
+\end{frame}
+
+
+\section{Hierarchically Structured Meta-learning}
+\begin{frame}
+  \includegraphics[width=\textwidth]{fig/p3-title.png}
+  \center ICML 2019
+\end{frame}
+
+\begin{frame}{Motivation}
+  \begin{itemize}
+    \item Current meta-learning assume the transferable knowledge is globally shared
+  \end{itemize}
+    \center \includegraphics[width=0.4\textwidth]{fig/p3-global.png}
+
+  Note: This paper meta-learns \textbf{initial weights} (like MAML)
+\end{frame}
+
+\begin{frame}{Proposed Framework}
+  \begin{itemize}
+    \item Learn the knowledge within the cluster (rather than global)
+    \item Initiate a new cluster if the task is too different from existing clusters
+  \end{itemize}
+    \center \includegraphics[width=0.4\textwidth]{fig/p3-specific.png}
+\end{frame}
+
+\begin{frame}{Proposed Framework}
+    \center \includegraphics[width=\textwidth]{fig/p3-arch.png}
+\end{frame}
+
+\begin{frame}{Proposed Framework}
+  \begin{itemize}
+    \item \textbf{Task Representation} to extract feature of task $i$ :\\ \textit{Recurrent Autoencoder} Aggregator $\rightarrow$ get $\mathbf{g}_i$
+    \item \textbf{Hierarchical Task Clustering} to locate the task belongs to:\\ soft assignment $\rightarrow$ get final representation $\mathbf{h}_i^L$ 
+    \item \textbf{Knowledge Adaptation} to combine global and cluster-specific info: \\
+      \begin{itemize}
+        \item global info: $\theta_0$
+        \item cluster-specific gate: $\mathbf{o}_i = \texttt{FC}(\texttt{concat}(\mathbf{g}_i,\mathbf{h}_i^L))$
+      \end{itemize}
+  \end{itemize}
+  \center $\Rightarrow$ cluster-specific initial weight: $\theta_0^i = \theta_0 \circ \mathbf{o}_i$
 \end{frame}
 
 
