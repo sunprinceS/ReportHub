@@ -1,0 +1,74 @@
+\documentclass[12pt]{extarticle}
+\usepackage[left=2.0cm, right=2.0cm, top=2.0cm, bottom=2.5cm]{geometry}
+%\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{spreadtab}
+\usepackage{tikz}
+\usepackage{cite}
+
+%\usepackage[square,numbers]{natbib}
+%\bibliographystyle{abbrvnat}
+\renewcommand{\baselinestretch}{1.30}
+\usepackage{xeCJK}
+\usepackage{fontspec}
+\setCJKmainfont{DFFN_R3.TTC}
+\title{研究計畫書}
+\author{電機工程研究所~~~計算機科學組\\R07921053~~~徐瑞陽 \\ 技術部落格: \texttt{https://sunprinces.github.io/learning/}}
+%\email{r07921053@ntu.edu.tw}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{section}{學生背景}
+  \begin{subsection}{語音技術相關課程修習}
+~~~~學生徐瑞陽畢業於臺大電機系，在大二時修習了李宏毅老師所開設的機器學習及其深層與結構化之課程，初探了深度學習的技術，並於大三開始在語音實驗室進行專題研究。在大三為期一年的專題中，與同學方為一起進行了機器智慧問答系統的研究，利用樹型長短期記憶網路 (Tree-structured Long Short-Term Memory, TreeLSTM) 與記憶網路 (Memory Network) ，端對端地訓練機器根據所問的問題，從文本當中擷取相關資訊並做出回答，在托福聽力測驗這個語料庫上，達到了當時最好的結果，並於 2016 年的 SLT 國際會議中發表成果。
+
+    除了在專題研究中累積的文獻閱讀與實做經驗，學生也修習了數位語音處理、機器學習、數據分析學、語言分析、基因遺傳演算法、神經資訊學等相關課程，並參與了強化學習的讀書會，充實自己在語音、自然語言及機器學習各個面向的相關知識。
+  \end{subsection}
+
+  \begin{subsection}{實習及相關經驗}
+~~~~學生於大五時至瑞典的皇家理工學院交換一年，與來自歐陸各國的學生們互相交流切磋。並於交換期結束後，至蘋果公司總部的自然語言團隊擔任實習生，為期三個月的實習期，讓自己的能力提升到另一個檔次，而與團隊中另一位實習生方為在實習期所參與的專案，也已於 2019 年的 WWDC 亮相，將會在 2019 年 9 月出現在 iOS 13 中。
+
+    於碩一時，學生擔任語音實驗室之網管，管理叢集運算資源，深入了解並維護前任網管所引進的 Slrum 工作排程系統，讓同學們在跑實驗時，能不必擔心彼此搶佔同一資源致使雙方程式均無法運行的問題，並以 Go 語言整合 netdata，改寫原先不穩定的資源監控後端。同時也增添了新節點部署的自動化腳本、節點損壞的自動通報機制與設計更好的資源分配策略，讓實驗室同學在使用上更為便利，也讓網管的工作能更順利地交接給下一屆同學。
+  \end{subsection}
+\end{section}
+
+\begin{section}{研究主題: Language Adaptative Training in End-to-end Speech Recognition using Meta Learning}
+  近年來深度學習技術已經應用於許多語音的相關領域，並取得突破性的成果，如聲音轉換、智慧問答系統、語音辨識...等。在語音辨識的研究中，利用神經網路與隱式馬可夫鏈的混合模型 (DNN-HMM hybrid model) 建構以音素 (phoneme) 為單位的聲學模型，再利用發音字典 (lexicon) 與遞歸神經網路 (Recurrent Neural Network) 所訓練的語言模型來做語音辨識為目前最常被使用的架構。然而，這樣的架構除了要有每段語音 (utterance) 對應的翻譯之外，亦需事先用字典及維特比演算法 (Viterbi Algorithm) 對音素及幀 (frame) 做初步對齊後才能進行訓練，因為標註字典的成本昂貴且門檻較高，這樣的設定對於世界上多數的非主流研究語言是不切實際的。
+
+  因此，Graves 等人提出了端對端的語音辨識系統之構想\cite{graves2014towards}，近年來也有許多相關模型被提出，如百度的 DeepSpeech \cite{hannun2014deep}、Google 的 LAS \cite{chan2016listen}...等。這些模型主要以 Sequence-to-sequence 作為核心，配合利用注意力機制的解碼器與以 CTC 為目標函數的解碼器，訓練出輸入為音訊，輸出為 grapheme 的端對端模型，同時整合了聲學模型與語言模型的訓練，並擺脫了需要字典的前提。
+
+  然而，相關文獻中均提到了端對端模型相較 DNN-HMM 需要更多的訓練資料，對於語料量本來就不足的非主流語言來說，這樣的前提也使得該架構難以應用於實務中。也因此，如何利用擁有大量語料的主流語言去訓練非主流語言 (Language Adaptative Training, LAT)為近年來語音界所面臨的課題之一，在接下來的篇幅裡，我會先介紹我所選擇的方法 - 元學習 (Meta Learning)，及其在其他領域所取得的階段性成果，再介紹目前 LAT 的主流方法 - 遷移學習 (Transfer Learning) ，及為什麼元學習比其更適合實做 LAT，以及相較於其他領域的應用，將元學習應用在語音領域有何不同之處。
+
+
+  \begin{subsection}{元學習介紹}
+    \cite{finn2017model}
+  \end{subsection}
+
+  \begin{subsection}{希望解決的問題及價值}
+    是否拆兩段？
+  \end{subsection}
+
+
+  \begin{subsection}{模型介紹}
+    foo 
+  \end{subsection}
+
+\end{section}
+
+\begin{section}{未來發展}
+  foo
+\end{section}
+
+\bibliographystyle{plain}
+\bibliography{M335}
+
+\end{document}

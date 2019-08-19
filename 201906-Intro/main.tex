@@ -196,7 +196,7 @@
     \item Pretrained corpus contain \textbf{100} languages
     \item Experiment and analyze relative importance of similarity between pretraining and target languages
     \item \textit{(not so novel)} Both grapheme and phoneme objective
-    \item \textit{(not so novel)} lanugage-adversarial pretraining
+    \item \textit{(not so novel)} Language-adversarial pretraining
   \end{itemize}
 \end{frame}
 
@@ -283,7 +283,7 @@
         \item cluster-specific gate: $\mathbf{o}_i = \texttt{FC}(\texttt{concat}(\mathbf{g}_i,\mathbf{h}_i^L))$
       \end{itemize}
   \end{itemize}
-  \center $\Rightarrow$ cluster-specific initial weight: $\theta_0^i = \theta_0 \circ \mathbf{o}_i$
+  \center $\Rightarrow$ cluster-specific initial weight: $\theta_{0,i} = \theta_0 \circ \mathbf{o}_i$
 \end{frame}
 
 
