@@ -1,9 +1,12 @@
 \documentclass[12pt,UTF8,fntef]{article}
-\usepackage[left=2.0cm, right=2.0cm, top=2.0cm, bottom=2.5cm]{geometry}
+\usepackage[left=1.8cm, right=1.8cm, top=1.8cm, bottom=1.8cm]{geometry}
 %\usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage[unicode, pdfborder={0 0 0}, bookmarksdepth=-1]{hyperref}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage[shortlabels, inline]{enumitem}
+\usepackage{fancyhdr}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{hyperref}
@@ -19,6 +22,25 @@
 \pgfplotsset{width=15cm}
 \pgfplotsset{height=8cm}
 \pgfplotsset{compat=1.16}
+
+\hypersetup{
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={My title},    % title
+    pdfauthor={Author},     % author
+    pdfsubject={Subject},   % subject of the document
+    pdfcreator={Creator},   % creator of the document
+    pdfproducer={Producer}, % producer of the document
+    pdfkeywords={keyword1, key2, key3}, % list of keywords
+    pdfnewwindow=true,      % links in new PDF window
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=purple,          % color of internal links (change box color with linkbordercolor)
+    citecolor=blue,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
 
 %\usepackage[square,numbers]{natbib}
 %\bibliographystyle{abbrvnat}
@@ -47,23 +69,23 @@
     ~~~~學生於大五時至瑞典的皇家理工學院 (KTH) 交換一年，與來自歐陸各國的學生們互相交流切磋。並於交換期結束後，至蘋果公司總部的自然語言團隊擔任實習生，為期三個月的實習期，讓自己的能力提升到另一個檔次，而與團隊中另一位實習生方為所參與的專案，也已於今年的 WWDC 亮相，將會在今年 9 月出現在 iOS 13 中。
 
     %於碩一時，學生擔任語音實驗室之網管，管理叢集運算資源，深入了解並維護前任網管所引進的 Slrum 工作排程系統，讓同學們在跑實驗時，能不必擔心彼此搶佔同一資源致使雙方程式均無法運行的問題，並以 Go 語言整合 netdata，改寫原先不穩定的資源監控後端。同時也增添了更多新節點部署的自動化腳本、節點損壞的自動移除與通報機制及設計更好的資源分配策略，讓實驗室同學在使用上更為便利，也讓網管的工作能更順利地交接給下一屆同學。
-    於碩一時，學生擔任語音實驗室之網管，管理叢集運算資源，深入了解並維護前任網管所引進的 Slrum 工作排程系統，讓同學們在跑實驗時，能不必擔心彼此搶佔同一資源致使雙方程式均無法運行的問題，並以 Go 語言整合 netdata，改寫原先不穩定的資源監控後端。同時也增添了節點損壞的檢查移除與通報機制及設計更好的資源分配策略，讓實驗室同學在使用上更為便利，也讓網管的工作能更順利地交接給下一屆同學。
+    於碩一時，學生擔任語音實驗室之網管，管理叢集運算資源，深入了解並維護前任網管所引進的 Slrum 工作排程系統，讓同學們在跑實驗時，不必擔心彼此搶佔同一資源致使雙方程式均無法運行的問題，並以 Go 語言整合 netdata，改寫原先不穩定的資源監控後端。同時也增添了節點損壞的自動檢查與通報機制，及設計更好的資源分配策略，讓實驗室同學在使用上更為便利，也讓網管的工作能更順利地交接給下一屆同學。
   \end{subsection}
 \end{section}
 
 \begin{section}{研究主題: Language Adaptative Training in End-to-end Speech Recognition using Meta Learning}
-~~~~近年來深度學習技術已經應用於許多語音的相關領域，並取得突破性的成果，如聲音轉換、智慧問答系統、語音辨識...等。在語音辨識的研究中，利用神經網路與隱式馬可夫模型的混合模型 (DNN-HMM hybrid model) 建構以音素 (phoneme) 為單位的聲學模型，再利用發音字典 (lexicon) 與遞歸神經網路 (Recurrent Neural Network) 所訓練的語言模型來做語音辨識為目前最常被使用的架構。然而，這樣的架構除了要有每段語音 (utterance) 對應的翻譯之外，亦需事先用字典及維特比演算法 (Viterbi Algorithm) 對音素及幀 (frame) 做初步對齊後才能進行訓練，因為標註字典的成本昂貴且門檻較高，這樣的設定對於多數的非主流研究語言是不切實際的。
+~~~~近年來深度學習技術已經應用於許多語音的相關領域，並取得突破性的成果，如聲音轉換、智慧問答系統、語音辨識...等。在語音辨識的研究中，利用神經網路與隱式馬可夫模型的混合模型 (DNN-HMM Hybrid Model) 建構以音素 (phoneme) 為單位的聲學模型，再利用發音字典 (lexicon) 與遞歸神經網路 (Recurrent Neural Network) 所訓練的語言模型來做語音辨識為目前最常被使用的架構。然而，這樣的架構除了要有每段語音 (utterance) 對應的翻譯之外，亦需事先用字典及維特比演算法 (Viterbi Algorithm) 對音素及幀 (frame) 做初步對齊後才能進行訓練，因為標註字典的成本昂貴且門檻較高，這樣的設定對於多數的非主流研究語言是不切實際的。
 
-因此，Graves 等人提出了端對端的語音辨識系統之構想\cite{graves2014towards}，近年來也有許多相關模型被提出，如百度的 DeepSpeech \cite{hannun2014deep}、Google 的 LAS \cite{chan2016listen} (如 Figure \ref{fig:monoASR})...等。這些模型主要以序列到序列模型 (Sequence-to-sequence model) 作為核心，配合利用專注機制 (Attention) 的解碼器與以 Connectionist Temporal Classification (CTC) 為目標函數的解碼器，訓練出輸入為音訊，輸出為字位 (grapheme) 的端對端模型，同時整合了聲學模型與語言模型的訓練，並擺脫了需要字典的前提。
+因此，Graves 等人提出了端對端的語音辨識系統之構想\cite{graves2014towards}，近年來也有許多相關模型被提出，如百度的 DeepSpeech \cite{hannun2014deep}、Google 的 LAS \cite{chan2016listen} (架構如 Figure \ref{fig:monoASR} 所示)...等。這些模型主要以序列到序列模型 (Sequence-to-Sequence Model) 作為核心，配合利用專注機制 (Attention) 的解碼器與以 Connectionist Temporal Classification (CTC) 為目標函數的解碼器，訓練出輸入為音訊，輸出為字位 (grapheme) 的端對端模型，同時整合了聲學模型與語言模型的訓練，並移除了需要字典的前提。
 
-  然而，相關文獻中均提到了端對端模型相較 DNN-HMM ，若要達到相同詞錯誤率 (Word Error Rate, WER)的情況下，需要更多訓練資料，對於語料量本來就不足的非主流語言來說，這樣的前提也使得該架構難以應用於實務中。也因此，如何利用多語料語言 (high-resource language) 去輔助訓練少語料語言(low-resource language) 的方法 - 語言自適應訓練 (Language Adaptative Training, LAT) 為近年來語音界的主要研究方向之一，在接下來的篇幅裡，我會先介紹我所選擇的方法 - 元學習 (Meta Learning)，及其在其他領域的應用，再介紹目前 LAT 的主流方法 - 遷移學習 (Transfer Learning) ，及為什麼元學習比其更適合實做 LAT，以及相較於其他應用，將元學習應用在語音領域有何不同之處，及這樣的不同會帶來什麼樣的使用限制，最後會展示目前的初步實驗結果。
+  然而，相關文獻中均提到了端對端模型相較 DNN-HMM ，若要達到相同詞錯誤率 (Word Error Rate, WER)的情況下，需要更多訓練資料，對於語料量本來就不足的非主流語言來說，這樣的前提也使得該架構難以應用於實務中。也因此，如何利用多語料語言 (High-resource Language) 去輔助訓練少語料語言(Low-resource Language) 的方法 - 語言自適應訓練 (Language Adaptative Training, LAT) 為近年來語音界的主要研究方向之一，在本章中，我會先介紹我所選擇的方法 - 元學習 (Meta Learning)，及其在其他領域的應用，再介紹目前 LAT 的主流方法 - 遷移學習 (Transfer Learning) ，及為什麼元學習比其更適合實做 LAT，以及相較於其他應用，將元學習應用在語音領域有何不同之處，及這樣的不同會帶來什麼樣的使用限制，最後會展示目前初步的實驗結果。
 
 
 
   \begin{subsection}{元學習介紹}
-~~~~目前在監督式學習 (Supervised Learning) ，給定特定任務的大型資料集，從頭開始訓練模型的情境下，深度學習已經取得了很大的成功。然而，相較於人類在學習新任務時，給定少量樣本便能完成學習的情況，其對資料的利用顯然是沒有效率的。而人類之所以能快速學習，主因是我們有元學習 (Meta Learning)，又稱為學習如何學習 (Learning to learn) 的能力，能從先前的任務學習過程中，發現可借鑒的經驗，如此便能利用已習得的技能，達到快速學習新技能的目的。以下會定義元學習，並介紹及分類近年來提出的方法。
+~~~~目前在監督式學習 (Supervised Learning) - 給定特定任務的大型資料集，從頭開始訓練模型的情境下，深度學習已經取得了很大的成功。然而，相較於人類在學習新任務時，給定少量樣本便能完成學習的情況，其對資料的利用顯然是沒有效率的。而人類之所以能快速學習，主因是我們有元學習 (Meta Learning)，又稱為學習如何學習 (Learning to Learn) 的能力，能從先前的任務學習過程中，發現可借鑒的通用經驗，利用已習得的技能，達到快速學習新技能的目的。以下會定義元學習，並介紹及分類近年來提出的方法。
 
-    \begin{subsubsection}{Definition}
+    \begin{subsubsection}{定義}
       ~~~~以下定義 $\theta$ 為想優化的模型參數，$\mathcal{D}$ 為資料集，$\mathcal{A}$ 為衡量參數在資料集上好度的函數 (如分類問題中的最大似然)，元學習的目標為
 
       \begin{equation}
@@ -81,21 +103,21 @@
        %\end{equation}
     \end{subsubsection}
 
-    \begin{subsubsection}{Metric-based Approach}
-基於度量的元學習方法，如原型網路 \cite{snell2017prototypical}、配對網路\cite{vinyals2016matching}、關係網路 \cite{sung2018learning}...等, 主體在學習一個好的特徵編碼器 (Feature Encoder)，而經過該編碼器編碼後的特徵，再餵給核函數 (kernel function) 判斷樣本的相似程度 (如隱空間的歐式距離或餘弦距離)，進而達到分類的目的，此方法目前只適用於少量樣本分類。
+    \begin{subsubsection}{基於度量的元學習方法 (Metric-based Approach)}
+  主體在學習一個好的特徵編碼器 (Feature Encoder)，而經過該編碼器編碼後的特徵，再餵給核函數 (Kernel Function) 判斷樣本的相似程度 (如隱空間的歐式距離或餘弦距離)，進而達到分類的目的，如原型網路 (Prototypical Network) \cite{snell2017prototypical}、配對網路 (Matching Network)\cite{vinyals2016matching}...等, 此方法目前僅用於分類問題。
     \end{subsubsection}
 
-    \begin{subsubsection}{Model-based Approach}
-基於模型設計的元學習方法，主體在藉由設計類似智慧問答系統的模型架構及讀寫策略，使其能利用新資料集的訓練資料來預測測試資料。如記憶增強網路 \cite{santoro2016meta}利用神經圖靈機，建構一個可讀寫的外部記憶，用來儲存訓練樣本以便預測時查找。因其讀寫外部記憶的複雜度為 $\mathcal{O}(|\mathcal{D}|)$，目前僅在少量樣本分類中使用。
+    \begin{subsubsection}{基於模型設計的元學習方法 (Model-based Approach)}
+      主體在藉由設計類似智慧問答系統的模型架構及讀寫策略，使其能利用新資料集的訓練資料來預測測試資料。如記憶增強網路 (Memory Augmented Network) \cite{santoro2016meta}利用神經圖靈機，建構一個可讀寫的外部記憶，用來儲存訓練樣本以便預測時查找。因其讀寫外部記憶的複雜度為 $\mathcal{O}(|\mathcal{D}|)$，目前僅在少量樣本分類中使用。
     \end{subsubsection}
 
-    \begin{subsubsection}{Optimization-based Approach} \label{opt-meta}
-基於優化的元學習方法，主體在學習訓練過程中的各個模塊如優化器\cite{ravi2016optimization}、初始參數\cite{nichol2018first, finn2017model,flennerhag2018transferring} ，或者強化學習中的損失函數、回報 (return) 的超參數...等。需注意的是，利用這組參數直接在新資料集上進行預測並不能得到理想的結果，而是以這組參數進行訓練所得的模型能有好的結果。
+    \begin{subsubsection}{基於優化的元學習方法 (Optimization-based Approach)} \label{opt-meta}
+主體在學習訓練過程中的各個模塊如優化器\cite{ravi2016optimization}、初始參數\cite{nichol2018first, finn2017model,flennerhag2018transferring} ，或者強化學習中的損失函數、回報 (return) 的超參數...等。需注意的是，利用這組參數直接在新資料集上進行預測並不能得到理想的結果，而是以這組參數進行訓練所得的模型能有好的表現。
     \end{subsubsection}
   \end{subsection}
+  \newpage
 
   \begin{subsection}{遷移學習應用於 LAT} \label{trans-asr}
-    目前端對端語音辨識模型 LAT 的主流方法為遷移學習，基本架構如下。
 
   \begin{figure}[ht]
       \centering
@@ -104,7 +126,7 @@
       \label{fig:monoASR}
   \end{figure}
 
-  \vspace{-0.2in}
+  \vspace{-0.25in}
 
   \begin{figure}[ht]
     \centering
@@ -117,9 +139,9 @@
     \caption{Baseline model: Universal ASR \& MultiTask ASR}
   \end{figure}
 
-  其中 Figure \ref{fig:monoASR} 為基本的模型架構，可以訓練單一語言的模型。Figure \ref{fig:universalASR} 的架構為統一所有訓練語料的輸出類別，可以藉由聯集訓練語言的字位或使用國際音標來實現；Figure \ref{fig:multitaskASR} 架構則是對每個語言建構各自的解碼器，分別輸出各自的字位，但前面的編碼器是互相共享的。而在遷移到目標語言時，我們將輸出層換成適合該語言的層，重新訓練最後一層，或對整個模型進行微調 (fine-tuning) 以實現 LAT\footnote{不考慮將目標語言加入訓練，雖然這通常會讓結果更好，但我們希望訓練的模型對目標語言沒有任何假設}。
+  目前端對端語音辨識模型 LAT 的主流方法為遷移學習。其中 Figure \ref{fig:monoASR} 為基本的模型架構，可以訓練單一語言的模型。Figure \ref{fig:universalASR} 則延伸原先的架構，統一所有訓練語料的輸出類別，可藉由聯集訓練語言的字位或使用語言通用的國際音標來實現；Figure \ref{fig:multitaskASR} 架構則是對不同語言建構各自的解碼器，分別輸出字位，但前面的編碼器是互相共享的。在遷移到目標語言時，我們將輸出層換成適合該語言的層，並重新訓練輸出層，或對整個模型進行微調 (fine-tuning) 以實現 LAT\footnote{此處不考慮將目標語言加入訓練，雖然這通常會讓結果更好，但我們希望訓練的模型對目標語言沒有任何假設}。
 
-~~在編碼器端，為了消弭不同語言間差異，擷取出語言獨立 (language-independent) 的特徵供解碼器使用，常見的作法有加上語言分類器進行對抗訓練 (adversarial training)，或加入音素、子字單位 (subword unit)的 CTC 解碼器。
+~~在編碼器端，為了消弭不同語言的差異，擷取出語言獨立 (language-independent) 的特徵供解碼器使用，常見的作法有加上語言分類器進行對抗訓練 (adversarial training)，或加入音素、子字單位 (subword unit)的 CTC 解碼器。
   \end{subsection}
 
   \begin{subsection}{元學習應用於 LAT}
@@ -132,26 +154,27 @@
       \label{fig:motivation}
   \end{figure}
 
-  遷移學習以一個在多語料(多語言)訓練好的模型為基準，用於學習新的目標語言，如Figure \ref{fig:motivation} 的 (a)、(b)，然而問題有二︰
+  遷移學習以一個在多語料(多語言)訓練好的模型為基準，用於學習新的目標語言，如Figure \ref{fig:motivation} 的 (a)、(b)\footnote{圖片來自 \cite{gu2018meta}}，然而問題有二︰
       \begin{enumerate}[itemsep=-1mm]
-        \item 需假設訓練語料語種不能相差太多，因在訓練過程中必須同時滿足各個語言的目標函數，而這相當於對模型施加了正則化 (regularization)，使其無法很好處理語種差異過大，導致正則化強度太大，無法達到最佳表現的情況。
-        \item 需假設訓練語料與測試語料語種不能相差太多，否則在損失平面 (loss surface) 上過長的移動，會降低找到好解的可能。 
+        \item 需假設訓練語料彼此的最優參數不能相差太多，因在訓練過程中必須同時滿足各語言的目標函數，這相當於對模型施加了正則化 (regularization)，使其無法很好處理語種差異過大，導致正則化強度太大，無法達到最佳表現的情況。
+        \item 需假設訓練語料與測試語料的最優參數不能相差太多，否則在損失平面 (loss surface) 上過長的移動，會降低找到好解的可能。 
       \end{enumerate}
 
-      元學習中學習初始參數的方法(\ref{opt-meta}) 很好地解決了上述問題，透由在進行梯度更新時，將學習過程隱性編碼進所找到的參數中，使得所學到的參數可以快速泛化到不同語言，如 Figure \ref{fig:motivation} 的 (c)。
+      元學習中學習初始參數的方法(\ref{opt-meta}) 很好地解決了上述問題，透由在梯度更新時，將學習過程隱性編碼進所找到的參數中，使得該參數可以快速泛化到不同語言，如 Figure \ref{fig:motivation} 的 (c)所示。
     \end{subsubsection}
     \begin{subsubsection}{使用限制及挑戰} \label{meta-problem}
       目前元學習主要應用於機器視覺的少樣本分類、與強化學習，直至去年，才有了第一篇應用於機器翻譯的研究 \cite{gu2018meta}，MetaNMT，訓練多語言翻譯至英文的模型，原因為以下兩點︰
       \begin{enumerate}[itemsep=-1mm]
-        \item 要訓練一個成功的語音辨識系統，難度相當高，不可能僅僅使用數個樣本便達到，因此多數針對少樣本分類問題的元學習演算法不適用，僅有基於優化的演算法 (\ref{opt-meta}) 在以一階梯度近似的前提下才能應用於該情境 (如 FOMAML \cite{finn2017model}、Reptile\cite{nichol2018first})。
-        \item 多數學習初始參數的元學習方法雖名為與模型無關 (model-agnostic) ，但在使用時仍要求模型架構必須相同 (如網路中每層的神經元數量)，MetaNMT 的處理方式為先將所有語言映射到相同空間，使得輸入層一致進而達到全模型一致；但在語音辨識中，雖然不同語言的輸入同為相同維度的語音特徵，輸出卻是每個語言都不同，因此無法直接套用元學習。
+        \item 要訓練一個成功的機器翻譯或語音辨識系統，難度相當高，不可能僅僅使用數個樣本便達到，因此多數針對少樣本分類問題的元學習演算法不適用，僅有基於優化的演算法 (\ref{opt-meta}) 在以一階梯度近似的前提下才能應用於該情境 (如 FOMAML \cite{finn2017model}、Reptile\cite{nichol2018first})。
+        \item 多數學習初始參數的元學習方法雖名為與模型無關 (Model-Agnostic) ，但在使用時仍要求模型架構必須相同 (如網路中每層的神經元數量)，MetaNMT 的處理方式為先將所有語言映射到相同空間，使得輸入層一致進而達到全模型一致；但在語音辨識中，雖然不同語言的輸入同為相同維度的語音特徵，輸出卻是每個語言都不同，因此無法直接套用元學習。
       \end{enumerate}
     \end{subsubsection}
-    \begin{subsubsection}{初步實驗 - 音素辨識}
-      在將元學習應用於端對端語音辨識之前，我先嘗試音素辨識這個較為簡單的語音任務，來驗證其可行性，如 \ref{meta-problem} 所提到的模型架構問題，我放寬了對架構的假設，在每個任務的學習中，允許最後一層以同樣的方法進行權重初始化後再開始訓練，在測試時亦可置換最後一層。除此之外，相比於少樣本分類問題，我將原先對單位任務訓練資料量的限制從少樣本 (few-shot) 放寬到少語料 (low-resource)，在收斂速度的要求從幾步梯度就收斂放寬至快速自適應 (rapid adaptation)，如一個 epoch (約數百步梯度)，以更符合各語音任務的使用情境。
+    \begin{subsubsection}{初步實驗 - 音素辨識 (Framewise Phoneme Classification)}
+      在將元學習應用於端對端語音辨識之前，我先嘗試音素辨識這個較為簡單的語音任務，來驗證其可行性，如 \ref{meta-problem} 所提到的模型架構問題，我放寬了對架構的假設，在每個任務的學習中，允許最後一層以同樣的方法進行權重初始化後再開始訓練，在測試時亦可置換最後一層。除此之外，相比於少樣本分類問題，我將原先對單位任務訓練資料量的限制從少樣本 (Few-shot) 放寬到少語料 (Low-resource)，將對收斂速度的要求從幾步梯度就收斂放寬至快速自適應 (Rapid Adaptation)，如一個 epoch (約數百步梯度)，以更符合各語音任務的使用情境。
 
-      我選用 Tundra 這個語料庫做為評斷標準，比較了 MultiTask ASR與 Meta ASR 兩種模型與完全沒有預訓練 (no-pretrain) 的差異
-      \begin{figure}[H]
+      我選用 TUNDRA \cite{stan2013tundra} 這個語料庫做為評斷標準，每個語言有 $4 \sim 10$小時不等的語料，比較了 MultiTask ASR 與 Meta ASR 兩種模型預訓練於 6 種語言，與完全沒有預訓練 (no-pretrain) 的模型，在目標的兩種語言訓練 5 個 epoch 後在測試資料進行預測的表現。
+
+    \begin{figure}[H]
     \centering
     \hspace{-5.2cm}
     \begin{tikzpicture}[trim axis left, trim axis right]
@@ -159,13 +182,13 @@
     \begin{axis}[
       width=0.6\linewidth,
       legend entries={Meta ASR (on \SI{10}{\percent} data), MultiTask ASR (on \SI{10}{\percent} data), no-pretrain (on \SI{10}{\percent} data),no-pretrain (on \SI{20}{\percent} data), no-pretrain (on \SI{50}{\percent} data)} ,
-          xlabel = {ell (problem size)},
+          xlabel = {Number of pretraining steps},
           xmin=0,
           xmax=210,
           grid=both,
           %legend style={at={(0.65,0.62)},anchor=south west},
           legend pos=outer north east,
-          ylabel={$t_{\text{conv}}$(\# of generations)}]
+          ylabel={Phoneme Classification Accuracy}]
     \addplot+[smooth]table{reptile_metaval};
     \addplot+[smooth]table{ft_metaval};
      \addplot[style=ultra thick,dashed,] coordinates {(10,0.557) (200,0.557)};
@@ -173,15 +196,18 @@
      \addplot[style=ultra thick,dashed, brown] coordinates {(10,0.628) (200,0.628)};
     \end{axis}
     \end{tikzpicture}
-    \caption{Problem size versus convergence time(repeat 100 times)}
+    %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+    \caption{TUNDRA experiment}
+    \label{fig:tundra-exp}
   \end{figure}
+  從 Figure \ref{fig:tundra-exp} 可以看出，有預訓練的模型可以用較少的目標語言訓練資料便有較好的表現；且元學習的方法 (Meta ASR) 相較 baseline model (MultiTask ASR)，在資料量稀缺的情況下不會過度擬合 (Over-fitting) 於預訓練語言，在目標語言的測試資料有較好的表現。
     \end{subsubsection}
   \end{subsection}
 \end{section}
 
 \begin{section}{未來發展}
   \begin{subsection}{目前進度} \label{progress}
-    在端對端的語音辨識中，我選用 IARPA-BABEL 這個語料庫做為評斷標準，該語料庫包含了 $10$ 餘種語言，每則語言約有 $40 \sim 80$ 小時不等的語料，我已完成訓練在單一語言上的模型，其結果如 Table \ref{table:monoASR}，當中 FLP (Full Language Pack) 為利用該語言所有的訓練語料所得到的結果，而 LLP (Low Language Pack) 則是根據 Kaldi 處方所選出的約 $10$ 小時的語料訓練而得。除了元學習模型，MetaASR 的實現，亦會實現 \ref{trans-asr} 提到的 Universal ASR, MultiTask ASR 作為底線 模型 (baseline)。
+    在端對端的語音辨識中，我選用 IARPA-BABEL 這個語料庫做為評斷標準，該語料庫包含了 $10$ 餘種語言，每則語言約有 $40 \sim 80$ 小時不等的語料，我已完成訓練在單一語言上的模型，其結果如 Table \ref{table:monoASR}，當中 FLP (Full Language Pack) 為利用該語言所有的訓練語料所得到的結果，而 LLP (Low Language Pack) 則是根據 Kaldi 處方所選出的約 $10$ 小時的語料訓練而得。除了 MetaASR 的實現，亦會實現 \ref{trans-asr} 提到的 Universal ASR, MultiTask ASR 作為底線 模型 (baseline)。
 
 \begin{table}[ht]
   \centering
@@ -203,7 +229,7 @@
 \end{table}
   \end{subsection}
 
-  \begin{subsection}{切除研究}
+  \begin{subsection}{切除研究 (Ablation Study)}
     \ref{progress} 中，在訓練策略上省略了許多能讓系統表現更好的技巧如以下：
     \begin{enumerate}[itemsep=-2mm]
       \item 利用該語言的文本(不含音訊)進行語言模型的預訓練，並加入解碼器的損失函數中，在 IARPA-BABEL 中，可以選擇用非 LLP 的翻譯作為該訓練文本。
@@ -211,12 +237,12 @@
       \item 加上更好的特徵抽取層，如在編碼器前端使用 VGG 作為頻譜特徵抽取層。
       \item 增加更多訓練資料
     \end{enumerate}
-    藉由加入以上方法，觀察元學習帶來的表現進步主要可能是來自於更有效率地學習語言模型、或更有效率地學習聲學模型。
+    藉由加入以上方法，觀察元學習帶來的表現進步主要可能來自於更有效率地學習語言模型、或更有效率地學習聲學模型。
   \end{subsection}
 
   \begin{subsection}{泛化性分析}
     \begin{enumerate}[itemsep=-1mm]
-      \item 置換訓練語言與目標語言，觀察元學習帶來的進步是否與語言相似程度無關。若有關，那是與語言間的何種關係(如地理位置、是否屬於相同語系)有關，而在底線模型是否也有類似觀察，可提供日後研究者在對目標語言有一定了解的前提下，如何選擇訓練語種的參考。
+      \item 置換訓練語言與目標語言，觀察元學習帶來的進步是否與語言相似程度無關。若有關，那是與語言間的何種關係有關(如地理位置、是否屬於相同語系)，而在 baseline model 是否也有類似觀察，可提供日後研究者在對目標語言有一定了解的前提下，如何選擇訓練語種的參考。
       \item 目前使用的架構為 LAS \cite{chan2016listen}，亦可測試於 DeepSpeech、Wav2letter...等架構，觀察元學習帶來的表現進步是否與模型無關。
       \item 設計課程學習 (Curriculum Learning) 的實驗，讓模型先完成簡單的任務再開始進行較困難的任務，觀察元學習所學習到的初始化參數是否能在簡單任務中不用訓練便能有好的預測結果，檢驗兩者之間是否有所關聯。
     \end{enumerate}   
