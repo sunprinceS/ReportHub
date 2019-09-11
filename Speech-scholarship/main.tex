@@ -203,7 +203,7 @@
 
 \begin{section}{未來發展}
   \begin{subsection}{目前進度} \label{progress}
-    在端對端的語音辨識中，我選用 IARPA-BABEL 這個語料庫做為評斷標準，該語料庫包含了 $10$ 餘種語言，每個語言約有 $40 \sim 80$ 小時不等的語料，我已完成訓練在單一語言上的模型，其結果如 Table \ref{table:monoASR}，當中 FLP (Full Language Pack) 為利用該語言所有的訓練語料所得到的結果，而 LLP (Low Language Pack) 則是根據 Kaldi 處方所選出的約 $10$ 小時的語料訓練而得。除了 MetaASR 的實現，亦會實現 \ref{trans-asr} 提到的 Universal ASR, MultiTask ASR 作為底線 模型 (baseline)。
+    在端對端的語音辨識中，我選用 IARPA-BABEL 這個語料庫做為評斷標準，該語料庫包含了 $10$ 餘種語言，每個語言約有 $40 \sim 80$ 小時不等的語料，我已完成訓練在單一語言上的模型，其結果如 Table \ref{table:monoASR}，當中 FLP (Full Language Pack) 為利用該語言所有的訓練語料所得到的結果，而 LLP (Limited Language Pack) 則是根據 Kaldi 處方所選出的約 $10$ 小時的語料訓練而得。除了 MetaASR 的實現，亦會實現 \ref{trans-asr} 提到的 Universal ASR, MultiTask ASR 作為底線 模型 (baseline)。
 
 \begin{table}[ht]
   \centering
