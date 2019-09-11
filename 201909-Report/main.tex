@@ -211,6 +211,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
   \end{itemize}
 \end{frame}
 
+\subsection{CAVIA}
 \begin{frame}{CAVIA}
   \includegraphics[width=\textwidth]{fig/CAVIA.png}
   \center ICML 2019
@@ -261,6 +262,7 @@ $\mathcal{A}$ depends on which application we want to learn \\
   Green line: also meta-learn $\theta_0$ (rather than set to $\mathbf{0}$)  
 \end{frame}
 
+\subsection{MT-Net}
 \begin{frame}{MT-Net}
   \includegraphics[width=\textwidth]{fig/title.png}
   \center ICML 2018
@@ -319,7 +321,43 @@ $\mathcal{A}$ depends on which application we want to learn \\
   \end{itemize}
 \end{frame}
 
-\section{MISC}
+\begin{frame}{Experiment: Sine Curves Regression}
+  Same setting as CAVIA
+  \center \includegraphics[width=0.8\textwidth]{fig/MT-sine.png}
+\end{frame}
+
+\begin{frame}{Experiment: Polynomial Regression}
+  A task
+  \begin{itemize}
+    \item defined by $\sum_{i=0}^n c_i x^i$
+    \item $n \in \lbrace 0, 1, 2 \rbrace$
+    \item $c_0, c_1, c_2 \sim U(-1,1)$
+    \item $10$ labeled data points given during adaptation
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Experiment: Polynomial Regression}
+  \center \includegraphics[width=0.7\textwidth]{fig/MT-poly.png}
+  \center Observation: dimension of the learned subspace reflect the underlying complexity of tasks
+\end{frame}
+
+\subsection{Warped Gradient Descent}
+\begin{frame}{Warped Gradient Descent}
+  \includegraphics[width=\textwidth]{fig/Warp-meta.png}
+  \center 8/30 on Arxiv
+\end{frame}
+
+\begin{frame}{Architecture of Warped-GD}
+  \begin{itemize}
+    \item predifined/learned meta param set
+    \item complicated warp module
+    \item define $\mathcal{L}_{meta}, \mathcal{L}_{task}$ individually
+  \end{itemize}
+  %\center \includegraphics[width=0.8\textwidth]{fig/MT-idea.png}
+\end{frame}
+
+%\section{MISC}
 \begin{frame}
 	\begin{center}
     %\weib{\LARGE{謝謝聆聽！}}
