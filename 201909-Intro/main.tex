@@ -37,7 +37,7 @@
   %\end{frame}
 %}
 
-\title{Paper Report}
+\title{Paper Intro}
 \subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{Speech Processing \& Machine Learning Laboratory}}}
 \author{徐瑞陽}
 \date{2019/09/25}
@@ -61,7 +61,11 @@
 \end{frame}
 
 \begin{frame}{Motivation}
+  Consider MAML as example...
+
   Conduct adaptation (inner loop) on high-dimensional parameter space $\Theta$ in low-resource/few-shot regime is hard
+
+  \pause
 
   \center Can we conduct on low-dimensional parameter space $\mathcal{Z}$ ? \\ 
   ($\text{dim}(\mathcal{Z}) < \text{dim}(\Theta)$)
@@ -71,10 +75,10 @@
   \center \includegraphics[width=0.7\textwidth]{fig/LEO-idea.png}
 \end{frame}
 
-\begin{frame}{Notice}
+\begin{frame}{Note}
   \begin{itemize}
     \item \textbf{[Offline]} Pretrain all but last layer using all data (cross tasks in \texttt{meta-train})
-    \item \textbf{[Meta-learn]} Output softmax layer
+    %\item \textbf{[Meta-learn]} Output softmax layer
     \item \textbf{[Task Conditioning]} Latent embedding $z$ conditions on task $T$
   \end{itemize}
 \end{frame}
@@ -84,18 +88,20 @@
 \end{frame}
 
 \begin{frame}{Implementation}
-  Given task $T = (\mathcal{D}^{tr}, \mathcal{D}^{val})$, which is $N$-way, $K$-shot, we want to learn $f(\theta)$ as follows
+  Given task $T = (\mathcal{D}^{tr}, \mathcal{D}^{val})$, which is $N$-way, $K$-shot,\\
+  we want to learn $f(\theta)$ as follows
   \[
     W = \begin{bmatrix}
-    \textemdash \quad w_1 \quad \textemdash  \\
-    \textemdash \quad w_2 \quad \textemdash \\
+    \textemdash \quad \quad w_1 \quad \quad \textemdash  \\
+    \textemdash \quad \quad w_2 \quad \quad \textemdash \\
     \cdot\\
     \cdot\\
     \cdot\\
     %\hdotsfor{5} \\
-    \textemdash \quad w_N \quad \textemdash\\
+    \textemdash \quad \quad w_N \quad \quad \textemdash\\
 \end{bmatrix}
 \]
+
 \center in latent space $\mathcal{Z}$
 \end{frame}
 
@@ -106,6 +112,7 @@ Parameter
   \item Relation Network $g_{\phi_r}$: $\mathcal{H} \times \mathcal{H} \rightarrow \mathcal{Z}$
   \item Decoder (parameter generator) $g_{\phi_d}$: $\mathcal{Z} \rightarrow \Theta$
 \end{itemize}
+  \center \includegraphics[width=0.8\textwidth]{fig/LEO-struct.png}
 \end{frame}
 
 \begin{frame}{Bridge between $w_n$ and $z_n$}
@@ -114,6 +121,13 @@ Parameter
     \includegraphics[width=0.8\textwidth]{fig/LEO-encoding.png}
   \end{center}
 
+  \begin{itemize}
+    \item Group $(\mu, \sigma)$ by class, then sample class-specific $z_n$
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Bridge between $w_n$ and $z_n$}
   Decoding
   \begin{center}
   \includegraphics[width=0.6\textwidth]{fig/LEO-decoding.png}
@@ -151,6 +165,130 @@ Parameter
 \begin{frame}{Result on miniImageNet}
   \center \includegraphics[width=0.7\textwidth]{fig/LEO-result.png}
 \end{frame}
+
+\section{Meta Dataset}
+
+\begin{frame}
+  \includegraphics[width=\textwidth]{fig/MD.png}
+  \center Arxiv 2019 March
+\end{frame}
+
+\begin{frame}{Motivation}
+  Current few-shot learning dataset is...
+  \begin{itemize}
+    \item \textbf{Fixed} number of shots and ways
+    \item Within-dataset generalization
+    \item Ignore class relationship when forming tasks
+  \end{itemize}
+
+  \pause
+  \center which is unrealistic
+\end{frame}
+
+\begin{frame}{Highlights}
+  \begin{itemize}
+    \item Propose a new dataset for few-shot learning to solve above issues
+    \item Propose a new algorithm \textbf{Proto-MAML}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Dataset formulation}
+  Unlike miniImageNet or Omniglot, it contains 10 datasets
+  \begin{itemize}
+    \item Meta-train: Otherwise (including 8 datasets)
+    \item Meta-valid: subset of ImageNet \\
+      (leaf nodes under carnivore, device)
+    \item Meta-test: MSCOCO, Traffic Signs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Task formulation}
+  \begin{itemize}
+    \item Number of ways, sampled uniformly from [5, MAX-NUM-CLASS] 
+    \item Class sampling: for Omniglot and ImageNet, sample according the hierarchy (coarse-grained)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Proposed Proto-MAML}
+  How to make MAML tackle different $N$?
+
+  \begin{enumerate}[<+->]
+    \item Pretrain using all data in Meta-train to get embedding function $g(\cdot)$ \\
+      (discard the last layer) as starting point
+    \item Use Proto-Net to learn the task-specific layer (the last layer) \\
+      (View prototype as weight matrix)
+    \item MAML
+  \end{enumerate}
+\end{frame}
+
+
+
+\section{Speech Recognition with Corpus Relatedness Sampling}
+\begin{frame}
+  \includegraphics[width=\textwidth]{fig/CRS.png}
+  \center Interspeech 2019
+\end{frame}
+\begin{frame}{Motivation}
+  Current multilingual training on low-resource language is as follows
+
+  \begin{enumerate}
+    \item Combine all small corpora together
+    \item Pretrain multilingual model by \textbf{sampling from each corpus uniformly}
+    \item Fine-tune on target corpus
+  \end{enumerate}
+
+  \pause
+
+  \center Sampling by corpus/language relatedness instead of uniform sampling?
+\end{frame}
+
+\begin{frame}{Note}
+  \begin{itemize}
+    \item \textbf{[Unpluggable]} Need to have target langauge corpus during pretraining
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Corpus Embedding}
+  Suppose $C_t$ is the target low-resource corpus, \\ 
+  we use larger training set $S = \lbrace C_1, C_2, \cdots, C_N \rbrace$ where $C_t \in S$ \\
+  The embedding matrix $E$
+
+
+  \[
+    E = \begin{bmatrix}
+    \textemdash \quad \quad e_1 \quad \quad \textemdash  \\
+    \textemdash \quad \quad e_2 \quad \quad \textemdash \\
+    \cdot\\
+    \cdot\\
+    %\hdotsfor{5} \\
+    \textemdash \quad \quad e_N \quad \quad \textemdash\\
+\end{bmatrix}
+  \]
+
+\end{frame}
+
+\begin{frame}{Structure}
+  \center \includegraphics[width=0.5\textwidth]{fig/CRS-struct.png}
+
+    $h = \text{Encoder}(x + e_i;W,E)$
+\end{frame}
+
+\begin{frame}{Corpus Relatedness Sampling}
+  \[
+  P [C_i] = \frac{\exp (T \cdot \texttt{score} (C_i, C_t))}{\sum_j \exp (T \cdot \texttt{score} (C_j, C_t))}
+\]
+
+Original method:
+\begin{enumerate}
+  \item Pretraining stage: $T \rightarrow 0$
+  \item Fine-tune stage: $T \rightarrow \inf$
+\end{enumerate}
+Current method:
+\[
+  T_{k+1} = a T_k
+\]
+\end{frame}
+
 
 %\section{MISC}
 \begin{frame}
