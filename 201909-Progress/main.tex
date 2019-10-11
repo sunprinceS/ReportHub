@@ -145,50 +145,24 @@
 
     \begin{figure}[H]
     \centering
-    \hspace{-5.2cm}
+    %\hspace{-5.2cm}
     \begin{tikzpicture}[trim axis left, trim axis right]
 
     \begin{axis}[
-      width=0.6\linewidth,
-      legend entries={Meta ASR (on \SI{10}{\percent} data), MultiTask ASR (on \SI{10}{\percent} data), no-pretrain (on \SI{10}{\percent} data),no-pretrain (on \SI{20}{\percent} data), no-pretrain (on \SI{50}{\percent} data)} ,
-          xlabel = {Number of pretraining steps},
-          xmin=0,
-          xmax=210,
+      width=1.0\linewidth,
+      height=0.5\linewidth,
+      legend entries={PHN-near3, PHN-far3},
+      xlabel = {Number of pretraining steps ($\times 10^3$)},
+          xmin=-5,
+          xmax=200,
           grid=both,
-          %legend style={at={(0.65,0.62)},anchor=south west},
-          legend pos=outer north east,
-          ylabel={Phoneme Classification Accuracy}]
-    \addplot+[smooth]table{phn_near3};
-    \addplot+[smooth]table{phn_far3};
-     \addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-     \addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-     \addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+          legend pos=inner north east,
+          ylabel={CER}]
+    \addplot+[smooth]table{stat/phn_near3};
+    \addplot+[smooth]table{stat/phn_far3};
     \end{axis}
     \end{tikzpicture}
-    %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-    %\caption{TUNDRA phoneme classification experiment}
-    \label{fig:tundra-exp}
   \end{figure}
-    %\begin{figure}[H]
-    %\centering
-    %\hspace{-5.2cm}
-    %\begin{tikzpicture}[trim axis left, trim axis right]
-
-    %\begin{axis}[
-      %width=0.6\linewidth,
-      %legend entries={PHN-near3, PHN-far3} ,
-          %xlabel = {Number of pretraining steps},
-          %xmin=0,
-          %xmax=210,
-          %grid=both,
-          %%legend style={at={(0.65,0.62)},anchor=south west},
-          %legend pos=outer north east,
-          %ylabel={CER}]
-    %\addplot+[smooth]table{phn_near3};
-    %\addplot+[smooth]table{phn_far3};
-    %\end{axis}
-    %\end{tikzpicture}
-  %\end{figure}
 
 \end{frame}
 
