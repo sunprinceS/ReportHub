@@ -1,5 +1,31 @@
 \section{Proposed Approach}
 \label{sec:approach}
 
-Meta meta \cite{finn2017model}
+\subsection{Multilingual CTC Model}
+\input{figs/arch.tex}
+We used the network architecture as illustrated in Fig. \ref{fig:model-arch}. Let $X = x_1, x_2, \cdots, x_T$ with length $T$ as input feature, $C = c_1, c_2, \cdots, c_L$ with length $L$ as target label. $X$ is encoded into sequence of hidden states $H = h_1, h_2, \cdots, h_L$ through the shared encoder, then fed into the fully connected layer of corresponding language with softmax activation to output the prediction sequence $\hat{C} = \hat{c_1}, \hat{c_2}, \cdots, \hat{c_L}$.
+%\vspace{-2pt}
+
+\textbf{CTC Loss}. CTC computes the posterior probability as below,
+
+\begin{equation}
+  P(C|X) = \sum_{\pi \in \mathcal{Z}(C)} P(\pi|X)
+\end{equation}
+where $\pi$ is the repeated character sequence  of $C$ with additional blank label, and $\mathcal{Z}(C)$ is the set of all possible sequences $\pi$ given sequence $C$. For each $\pi$, we can approximate the posterior probability as below,
+
+\begin{equation}
+  P(\pi|X) \approx \prod_{i=1}^{L} P(\hat{c_i}|X)
+\end{equation}
+
+The loss function of the model is thus defined as:
+
+\begin{equation}
+  L = - \log P(C|X)
+\end{equation}
+
+\subsection{Meta Learning for Low-Resource ASR}
+
+%\input{figs/flp_table.tex}
+%\input{figs/impact_on_size.tex}
+%\input{figs/curve.tex}
 

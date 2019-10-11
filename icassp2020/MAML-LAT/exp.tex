@@ -5,19 +5,13 @@
 \label{ssec:exp-setup}
 In this work, we used data from the IARPA BABEL project \cite{gales2014speech}. The corpus is mainly composed of conversational telephone speech (CTS). We selected 6 languages as non-target languages for multilingual pre-training: Bengali (Bn), Tagalog (Tl), Zulu (Zu), Turkish (Tr), Lithuanian (Lt), Guarani (Gn), and 4 target languages for adaptation: Vietnamese (Vi), Swahili (Sw), Tamil (Ta), Kurmanji (Ku). 
 
-We used Kaldi toolkit for feature extraction \cite{povey2011kaldi}. The input features were 80-dimensional Mel-filterbank features appended with 3-dimensional pitch features. The size of the sliding window is 25ms, and the stride is 10ms. We used the recipe provided by Espnet \cite{watanabe2018espnet} for the above feature extraction and final score evaluation.
-
+We followed the recipe provided by Espnet \cite{watanabe2018espnet} for data preprocessing and final score evaluation.  We used 80-dimensional Mel-filterbank and 3-dimensional pitch features as acoustic features. The size of the sliding window is 25ms, and the stride is 10ms. We used the shared encoder with 6-layer VGG extractor with downsampling and a 6-layer bidirectional LSTM network with 360 cells in each direction used in the previous work \cite{dalmia2018sequence}.
 \vspace{-5pt}
-\subsection{Model and Learning}
-%\label{ssec:model-detail}
-\subsubsection{Model}
-We used a 6-layer bidirectional LSTM network with 360 cells in each direction as the shared encoder across languages according to previous work \cite{dalmia2018sequence}.
 
-\vspace{-5pt}
-\subsubsection{Pretraining}
+%\subsubsection{Pretraining}
 %TODO: need to add the reference to the equation of meta gradient
-We use different language sets in MultiASR and MetaASR. Owing to the computation overhead, in MetaASR, we use first order approximation of MAML (FOMAML) as the meta learner. During inner loop update, we use a single gradient step of language-specific learning with SGD per computing the meta-gradient. In outer loop update, we update the shared encoder according to Eq. .In MultiASR, we also use SGD as optimizer to compute each batch update.
-\vspace{-5pt}
-\subsubsection{Fine-tuning Strategies}
-We used Limited Language Pack (LLP) which consists of 10\% Full Language Pack (FLP) of the other 3 languages to determine we should pick which pretraining step as the pretrained model for adapting on certain language's LLP and FLP.
+%We use different language sets in MultiASR and MetaASR. Owing to the computation overhead, in MetaASR, we use first order approximation of MAML (FOMAML) as the meta learner. During inner loop update, we use a single gradient step of language-specific learning with SGD per computing the meta-gradient. In outer loop update, we update the shared encoder according to Eq. .In MultiASR, we also use SGD as optimizer to compute each batch update.
+%\vspace{-5pt}
+%\subsubsection{Validation Set for Pretrained Model Picking}
+%We used Limited Language Pack (LLP) which consists of 10\% Full Language Pack (FLP) of the other 3 languages to determine we should pick which pretraining step as the pretrained model for adapting on certain language's LLP and FLP.
 

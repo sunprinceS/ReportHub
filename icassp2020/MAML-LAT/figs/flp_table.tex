@@ -1,0 +1,19 @@
+\begin{table*}[ht!]
+\centering
+\caption{Character (\% CER)  error rate w.r.t the pretraining languages set for all 4 target languages' FLP}
+\label{tab:block-results}
+\begin{tabular}{@{}ccccccccc@{}}
+%\begin{tabular}{l|cc|cc|cc|cc}
+\toprule
+Model                                    & \multicolumn{2}{c}{Vietnamese}                         & \multicolumn{2}{c}{Swahili}                        & \multicolumn{2}{c}{Tamil}                        & \multicolumn{2}{c}{Kurmanji} \\
+
+                                         & multi           & meta                                & multi           & meta                                & multi           & meta                                & multi           & meta           \\ \midrule
+\multicolumn{1}{c|}{- (no-pretrain)}         & 100.0          & \multicolumn{1}{c|}{100.0}          & 100.0          & \multicolumn{1}{c|}{100.0}          & 100.0          & \multicolumn{1}{c|}{100.0}          & 100.0          & 100.0          \\
+
+\multicolumn{1}{c|}{Bn Tl Zu}   & 53.2          & \multicolumn{1}{c|}{36.5}          & 52.8          & \multicolumn{1}{c|}{34.4}          & 47.8          & \multicolumn{1}{c|}{34.9}          & 55.9          & 41.1          \\
+\multicolumn{1}{c|}{ Tr Lt Gn} & 50.6          & \multicolumn{1}{c|}{35.1}          & 49.0          & \multicolumn{1}{c|}{32.2}          & 46.6          & \multicolumn{1}{c|}{33.2}          & 53.4          & 39.6          \\
+\multicolumn{1}{c|}{Bn Tl Zu Tr Lt Gn}           & 52.3          & \multicolumn{1}{c|}{36.6}          & 51.3          & \multicolumn{1}{c|}{33.0}          & 45.8          & \multicolumn{1}{c|}{33.9}          & 54.5          & 40.2          \\ \bottomrule
+%\multicolumn{1}{c|}{MLing + SWBD \& FT}       & \textbf{48.2} & \multicolumn{1}{c|}{\textbf{33.5}} & \textbf{48.7} & \multicolumn{1}{c|}{\textbf{31.9}} & \textbf{44.3} & \multicolumn{1}{c|}{\textbf{31.9}} & \textbf{51.5} & \textbf{37.8} \\ \bottomrule
+\end{tabular}
+\end{table*}
+
