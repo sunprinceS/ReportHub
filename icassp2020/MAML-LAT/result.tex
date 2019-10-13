@@ -1,11 +1,26 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{vs. Multitask Learning (MultiASR)}
+\subsection{vs. MultiASR}
 \label{ssec:baseline-multitask}
 
-%\input{figs/flp_table.tex}
+As presented in Table \ref{tab:llp-table} and \ref {tab:flp-table}, compared to monolingual training (without using pretrained weights as initialization,  listed on the first row of table and denoted as no-pretrain), MultiASR and MetaASR showed that multilingual pretraining using different combinations of source languages can improve ASR performance on target language. Besides, the proposed MetaASR significantly outperforms MultiASR across all target languages.
+\input{figs/curve1.tex}
+\input{figs/curve2.tex}
+% Hsu: (TODO) 等 final evaluation 出來後，會再加上幾句話
+
+
+
+\subsection{Training Curves}
+% (TODO) 等 FLP 跑出來後，看一下 overfitting 是否比較沒那麼嚴重，可以再加幾句話
+% ，不然就是再補不同的圖，說這個現象很普遍 (的確也是)
+
+The advantage over MetaASR over MultiASR is clearly shown in Fig. \ref{fig:curve1} and \ref{fig:curve2}. For MultiASR, the performance of adaptation saturates in early stage and finally degrades. As Fig. \ref{fig:meta-idea} illustrated, the training scheme of MultiASR tends to overfit on source languages, thus the learnt parameter may not be suitable for adaptation. In contrast, for MetaASR, not only the performance is better than MultiASR during whole pretraining process, but also gradually improves as pretraining continues without degrading.
+
 
 \subsection{Training Set Size}
-\label{ssec:training-size}
-
+\textcolor{red}{(TBD)} Depend on final evaluation \textcolor{red}{(TBD)}
+%\input{figs/impact_on_size.tex}
+%\label{ssec:training-size}
+%Fig. \ref{fig:impact-on-size},
+%If Meta and Multi achieve nearly the same performance in FLP(which is the case in MetaNMT), we want to see Meta can achieve better in LLP (so the lower the bar of meta, the better )

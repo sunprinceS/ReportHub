@@ -9,8 +9,9 @@
 \usepackage{booktabs}
 \usepackage{amsfonts}
 \usepackage{spconf,amsmath,graphicx}
+\usepackage{siunitx}
 \usepackage{tikz}
-\usepackage{pgfplots}
+\usepackage{pgfplotstable}
 \usepackage{subfig}
 \usepackage{float}
 %\usepackage[preprint]{spconf}
@@ -57,7 +58,7 @@
 \maketitle
 %
 \begin{abstract}
-  \textcolor{red}{(TBD BEGIN)} With the recent advances of deep learning, integrating the main modules of automatic speech recognition (ASR) such as acoustic model, pronunciation lexicon and language model into a single end-to-end model is highly attractive. Connectionist Temporal Classification (CTC) lends itself on such end-to-end approach by introducing an additional blank symbol and specifically-designed loss function optimizing to generate the correct character sequences from the speech signal directly, without framewise phoneme alignment in advance. With many recent results, end-to-end deep learning has created larger interest in speech community. \textcolor{red}{(TBD END)}
+  %\textcolor{red}{(TBD BEGIN)} With the recent advances of deep learning, integrating the main modules of automatic speech recognition (ASR) such as acoustic model, pronunciation lexicon and language model into a single end-to-end model is highly attractive. Connectionist Temporal Classification (CTC) lends itself on such end-to-end approach by introducing an additional blank symbol and specifically-designed loss function optimizing to generate the correct character sequences from the speech signal directly, without framewise phoneme alignment in advance. With many recent results, end-to-end deep learning has created larger interest in speech community. \textcolor{red}{(TBD END)}
 \end{abstract}
 %
 \begin{keywords}
@@ -69,17 +70,11 @@
 \input{exp.tex}
 \input{result.tex}
 
-
-
-
-
-
 \section{Conclusion}
 \label{sec:conclusion}
+In this paper, we proposed the meta learning approach to multilingual pretraining for speech recognition. The initial experimental results showed its potential in pretraining. In future work, We plan to use more languages (from IARPA BABEL or other corpora) and different combinations for pretraining to evaluate the effectiveness of MetaASR more extensively. 
 
-\textcolor{red}{TBD BEGIN}All is well \textcolor{red}{TBD END}
-
-
+In addition, based on MAML's model-agnostic property, this approach can be applied to other network architecture like Seq2seq model, and even different applications other than speech recognition in the speech community.
 
 % Below is an example of how to insert images. Delete the ``\vspace'' line,
 % uncomment the preceding line ``\centerline...'' and replace ``imageX.ps''
@@ -103,4 +98,61 @@
 \newpage
 \bibliography{strings,refs}
 
+% 以下不會放到 paper ，只是畫一些圖出來而已
+%\newpage
+\section{Appendix}
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{testing/mutli3-Tamil};
+  \addplot+[smooth]table{testing/meta3-tamil};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Tamil's LLP (near3)}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.7)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{testing/mutli6-tamil};
+  \addplot+[smooth]table{testing/meta6-tamil};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Tamil's LLP (near6)}
+\end{figure}
 \end{document}
