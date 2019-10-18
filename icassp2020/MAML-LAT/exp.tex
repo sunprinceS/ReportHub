@@ -1,31 +1,29 @@
 \section{Experiment}
 \label{sec:exp}
 
-%\subsection{Experimental Setup}
+%Lee:我覺得這章太多節了
+%Hsu: 並沒有提到現在只有 greedy decode 而已
+
+%\input{figs/llp_table.tex}
 \label{ssec:exp-setup}
-In this work, we used data from the IARPA BABEL project \cite{gales2014speech}. The corpus is mainly composed of conversational telephone speech (CTS). We selected 6 languages as non-target languages for multilingual pre-training: Bengali (Bn), Tagalog (Tl), Zulu (Zu), Turkish (Tr), Lithuanian (Lt), Guarani (Gn), and 4 target languages for adaptation: Vietnamese (Vi), Swahili (Sw), Tamil (Ta), Kurmanji (Ku), and experimented different combinations of non-target languages for pretraining.
+In this work, we used data from the IARPA BABEL project \cite{gales2014speech}. 
+The corpus is mainly composed of conversational telephone speech (CTS). We selected 6 languages as non-target languages for multilingual pretraining: 
+Bengali (Bn), Tagalog (Tl), Zulu (Zu), Turkish (Tr), Lithuanian (Lt), Guarani (Gn), and 4 target languages for adaptation: Vietnamese (Vi), Swahili (Sw), Tamil (Ta), Kurmanji (Ku), and experimented different combinations of non-target languages for pretraining.
+Each language has Full Language Pack (FLP) and Limited Language Pack (LLP), which consists of 10\% of FLP.
+%這裡解釋 FLP LLP
 
-We followed the recipe provided by Espnet \cite{watanabe2018espnet} for data preprocessing and final score evaluation.  We used 80-dimensional Mel-filterbank and 3-dimensional pitch features as acoustic features. The size of the sliding window is 25ms, and the stride is 10ms. We used the shared encoder with 6-layer VGG extractor with downsampling and a 6-layer bidirectional LSTM network with 360 cells in each direction used in the previous work \cite{dalmia2018sequence}.
+We followed the recipe provided by Espnet \cite{watanabe2018espnet} for data preprocessing and final score evaluation.  We used 80-dimensional Mel-filterbank and 3-dimensional pitch features as acoustic features. The size of the sliding window is 25ms, and the stride is 10ms. We used the shared encoder with a 6-layer VGG extractor with downsampling and a 6-layer bidirectional LSTM network with 360 cells in each direction used in the previous work \cite{dalmia2018sequence}.
 
-%\subsubsection{Pretraining} # TODO: move to approach
-%\vspace{-5pt}
-\input{figs/llp_table.tex}
-\input{figs/flp_table.tex}
 
-% (TODO) Hsu:Need to discussed use one or use three?
-% (TODO) Hsu: 最後一句超遨口的...叫 dev set 會不會太隨便？
-\subsection{Validation Languages}
-We used Limited Language Pack (LLP) which consists of 10\% Full Language Pack (FLP) of the other 3 languages to determine which pretraining step we should pick as the pretrained model for adapting on certain language's LLP and FLP. (For instance, when adapting on Vi, we use Sw, Ta, Ku s' LLP validation set as the validation set for Vi)
 
-\subsection{Meta Learning}
-For each meta learning episode, we use a single gradient step of language-specific learning with SGD when computing the meta gradient. Noted that in Eq. \ref{eq:meta-grad}, if we expand the loss term in the summation, we will find the second derivative term of $\theta$ appear. For computation efficiency, some previous works \cite{finn2017model, nichol2018reptile} showed that we could ignore the second-order term without affecting the performance too much. Therefore, we approximate Eq. \ref{eq:meta-grad} as follows.
+\textbf{Meta Learning}. For each episode, we use a single gradient step of language-specific learning with SGD when computing the meta gradient. Noted that in Eq.~\ref{eq:meta-grad}, if we expand the loss term in the summation via Eq.~\ref{eq:fine-tune}, we will find the second-order derivative of $\theta$ appear. For computation efficiency, some previous works \cite{finn2017model, nichol2018reptile} showed that we could ignore the second-order term without affecting the performance too much.\\
+Therefore, we approximate Eq.~\ref{eq:meta-grad} as follows.
 
 \begin{equation}
-  \theta \leftarrow \theta - \eta^\prime \sum_k \nabla_{\textcolor{red}{\theta^\prime}} \mathcal{L}_{D^\prime_k}(\theta^\prime)
+  \theta \leftarrow \theta - \eta^\prime \sum_k \nabla_{\textcolor{red}{\theta_k^\prime}} \mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k})
 \end{equation}
 Also known as First-order MAML (FOMAML).
 
-\subsection{Fine-Tuning (Adaptation) and Evaluation}
-For adaptation on target language, we fine-tuned each monolingual model for 20 epochs for LLP, 18 epochs for FLP, and early-stopped on its own dev set, and evaluated on its test set. 
-%We report the results in Table \ref{tab:llp-table} and \ref{tab:flp-table}.
+%TODO: 說用 beam 還是 greedy ??
+We multilingually pretrained the model for 100K steps for both MultiASR and MetaASR. When adapting to one certain language, we use the LLP of the other three languages as validation sets to decide which pretraining step of the pretrained model we should pick. Then we fine-tuned the monolingual model 18 epochs for the target language on its FLP, 20 epochs on its LLP, and evaluated the performance on the test set via greedy decoding.
 

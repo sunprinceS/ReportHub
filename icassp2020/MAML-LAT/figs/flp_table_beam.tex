@@ -1,7 +1,7 @@
-\begin{table*}[thp!]
+\begin{table*}[ht!]
 \centering
 \caption{Character error rate (\si{\percent} CER) w.r.t the pretraining languages set for all 4 target languages' FLP}
-\label{tab:flp-table}
+\label{tab:flp-beam-table}
 \begin{tabular}{@{}ccccccccc@{}}
 %\begin{tabular}{l|cc|cc|cc|cc}
 \toprule
@@ -10,9 +10,9 @@ Model                                    & \multicolumn{2}{c}{Vietnamese}       
                                          & multi           & meta                                & multi           & meta                                & multi           & meta                                & multi           & meta           \\ \midrule
 \multicolumn{1}{c|}{(no-pretrain)}                   & \multicolumn{2}{c|}{71.5}                    & \multicolumn{2}{c|}{48.2}                    & \multicolumn{2}{c|}{71.4}          & \multicolumn{2}{c}{65.2}                    \\
 
-\multicolumn{1}{l|}{Bn Tl Zu}   &    57.5      & \multicolumn{1}{c|}{50.4}          & 49.4          & \multicolumn{1}{c|}{41.4}          & 67.0          & \multicolumn{1}{c|}{59.1}          & 62.1          & 57.9          \\
-\multicolumn{1}{l|}{ \qquad \qquad Tr Lt Gn} & 64.0          & \multicolumn{1}{c|}{49.8}          & 57.8          & \multicolumn{1}{c|}{41.8}          & 69.2          & \multicolumn{1}{c|}{59.3}          & 66.3          & 57.8          \\
-\multicolumn{1}{l|}{Bn Tl Zu Tr Lt Gn}           & 59.9          & \multicolumn{1}{c|}{50.4}          & 50.0          & \multicolumn{1}{c|}{42.7}          & 66.7          & \multicolumn{1}{c|}{60.1}          & 63.7          & 58.4          \\ \bottomrule
+\multicolumn{1}{l|}{Bn Tl Zu}   &    -      & \multicolumn{1}{c|}{50.4}          & 49.4          & \multicolumn{1}{c|}{41.4}          & 67          & \multicolumn{1}{c|}{59.1}          & 62.1          & 57.9          \\
+\multicolumn{1}{l|}{ \qquad \qquad Tr Lt Gn} & 64          & \multicolumn{1}{c|}{49.8}          & 57.8          & \multicolumn{1}{c|}{41.8}          & -          & \multicolumn{1}{c|}{59.3}          & 66.3          & 57.8          \\
+\multicolumn{1}{l|}{Bn Tl Zu Tr Lt Gn}           & 59.9          & \multicolumn{1}{c|}{50.4}          & 50          & \multicolumn{1}{c|}{42.7}          & -          & \multicolumn{1}{c|}{60.1}          & 63.7          & 58.4          \\ \bottomrule
 %\multicolumn{1}{c|}{MLing + SWBD \& FT}       & \textbf{48.2} & \multicolumn{1}{c|}{\textbf{33.5}} & \textbf{48.7} & \multicolumn{1}{c|}{\textbf{31.9}} & \textbf{44.3} & \multicolumn{1}{c|}{\textbf{31.9}} & \textbf{51.5} & \textbf{37.8} \\ \bottomrule
 \end{tabular}
 \end{table*}

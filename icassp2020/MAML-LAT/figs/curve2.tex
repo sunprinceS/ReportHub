@@ -1,4 +1,4 @@
-\begin{figure}[H]
+\begin{figure}[ht]
   \centering
   %\hspace{-2.2cm}
   \begin{tikzpicture}[trim axis left, trim axis right]
@@ -7,22 +7,23 @@
     width=\linewidth,
     height=6.5cm,
     %legend entries={MultiASR, MetaASR} ,
-    legend entries={MultiASR, MetaASR, no-pretrain on LLP} ,
+    legend entries={MultiASR, MetaASR, no-pretrain} ,
     xlabel = {Number of pretraining steps ($\times 1000$)},
         xmin=5,
         %xmax=130,
         grid=both,
-        legend style={at={(0.02,.73)},anchor=south west},
+        legend style={at={(0.02,0.48)},anchor=south west},
         %legend pos=inner north west,
         ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{testing/mutli3-swahili};
-  \addplot+[smooth]table{testing/meta3-swahili};
-   \addplot[style=ultra thick,dashed,] coordinates {(0,43.07) (100,43.07)};
+  \addplot+[smooth]table{multi-stat/multi6-swahili};
+  \addplot+[smooth]table{meta-stat/meta6-swahili};
+   \addplot[style=ultra thick,dashed,] coordinates {(0,64.3) (100,64.3)};
    %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
    %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
   \end{axis}
   \end{tikzpicture}
   %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Swahili's LLP}
+  \center \caption{Learning curves on Swahili's LLP \\  pretrained on Bn, Tl, Zu, Tr, Lt, Gn}
   \label{fig:curve2}
+  \vspace{-10pt}
 \end{figure}

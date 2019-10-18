@@ -31,7 +31,7 @@
 %\name{Jui-Yang Hsu, Yuan-Jui Chen,  Hung-yi Lee}
 \name{Jui-Yang Hsu\qquad Yuan-Jui Chen\qquad  Hung-yi Lee}
 \address{National Taiwan University \\
-\small{\texttt{\{r07921053, r079xxxxx, hungyilee\}@ntu.edu.tw}}}
+\small{\texttt{\{r07921053, r07922070, hungyilee\}@ntu.edu.tw}}}
 %
 % For example:
 % ------------
@@ -58,21 +58,25 @@
 \maketitle
 %
 \begin{abstract}
-  %\textcolor{red}{(TBD BEGIN)} With the recent advances of deep learning, integrating the main modules of automatic speech recognition (ASR) such as acoustic model, pronunciation lexicon and language model into a single end-to-end model is highly attractive. Connectionist Temporal Classification (CTC) lends itself on such end-to-end approach by introducing an additional blank symbol and specifically-designed loss function optimizing to generate the correct character sequences from the speech signal directly, without framewise phoneme alignment in advance. With many recent results, end-to-end deep learning has created larger interest in speech community. \textcolor{red}{(TBD END)}
+ (HAVEN'T FINISHED YET)  Besides directly training the model with all the source languages, there are various variants of MultiASR approaches. 
+Language-adversarial training approaches \cite{Yi2018AdversarialMT, adams2019massively} introduce language-adversarial classification objective to the shared encoder, negating the gradients backpropagated from the language classifier to encourage the encoder to extract more language-independent representations. 
+Hierarchical approaches \cite{Sanabria2018HierarchicalMT} introduce different granularity objectives by combining both character and phoneme prediction at different levels of the model.
+In addition, based on MAML's model-agnostic property, this approach can be applied to other network architecture like Seq2seq model, and even different applications other than speech recognition in the speech community.
 \end{abstract}
 %
 \begin{keywords}
-  meta-learning, low-resource, multi-lingual speech recognition, language adaptation, IARPA-BABEL
+  meta-learning, low-resource, speech recognition, language adaptation, IARPA-BABEL
 \end{keywords}
 %
 \input{intro.tex}
 \input{approach.tex}
 \input{exp.tex}
 \input{result.tex}
+%\input{figs/impact_on_size.tex}
 
 \section{Conclusion}
 \label{sec:conclusion}
-In this paper, we proposed the meta learning approach to multilingual pretraining for speech recognition. The initial experimental results showed its potential in pretraining. In future work, We plan to use more languages (from IARPA BABEL or other corpora) and different combinations for pretraining to evaluate the effectiveness of MetaASR more extensively. 
+(HAVEN'T FINISHED YET) In this paper, we proposed the meta learning approach to multilingual pretraining for speech recognition. The initial experimental results showed its potential in pretraining. In future work, We plan to use more languages (from IARPA BABEL or other corpora) and different combinations for pretraining to evaluate the effectiveness of MetaASR more extensively. 
 
 In addition, based on MAML's model-agnostic property, this approach can be applied to other network architecture like Seq2seq model, and even different applications other than speech recognition in the speech community.
 
@@ -100,7 +104,37 @@ In addition, based on MAML's model-agnostic property, this approach can be appli
 
 % 以下不會放到 paper ，只是畫一些圖出來而已
 %\newpage
-\section{Appendix}
+\section{Appendix (WON'T PUT ON PAPER)}
+
+\newpage
+% NEAR3
+\begin{section}{Near 3}
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/multi3-vietnamese};
+  \addplot+[smooth]table{meta-stat/meta3-vietnamese};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Vietnamese's LLP (near3)}
+\end{figure}
 
 \begin{figure}[htb]
   \centering
@@ -118,8 +152,35 @@ In addition, based on MAML's model-agnostic property, this approach can be appli
         legend style={at={(0.,.6)},anchor=south west},
         %legend pos=inner north west,
         ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{testing/mutli3-Tamil};
-  \addplot+[smooth]table{testing/meta3-tamil};
+  \addplot+[smooth]table{multi-stat/multi3-swahili};
+  \addplot+[smooth]table{meta-stat/meta3-swahili};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Swahili's LLP (near3)}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/multi3-tamil};
+  \addplot+[smooth]table{meta-stat/meta3-tamil};
    %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
    %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
    %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
@@ -142,11 +203,96 @@ In addition, based on MAML's model-agnostic property, this approach can be appli
         xmin=5,
         %xmax=130,
         grid=both,
-        legend style={at={(0.,.7)},anchor=south west},
+        legend style={at={(0.,.6)},anchor=south west},
         %legend pos=inner north west,
         ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{testing/mutli6-tamil};
-  \addplot+[smooth]table{testing/meta6-tamil};
+  \addplot+[smooth]table{multi-stat/multi3-kurmanji};
+  \addplot+[smooth]table{meta-stat/meta3-kurmanji};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Kurmanji's LLP (near3)}
+\end{figure}
+
+\end{section}
+\newpage
+%% NEAR 6
+\begin{section}{Near 6}
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/multi6-vietnamese};
+  \addplot+[smooth]table{meta-stat/meta6-vietnamese};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Vietnamese's LLP (near6)}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/multi6-swahili};
+  \addplot+[smooth]table{meta-stat/meta6-swahili};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Swahili's LLP (near6)}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/multi6-tamil};
+  \addplot+[smooth]table{meta-stat/meta6-tamil};
    %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
    %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
    %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
@@ -155,4 +301,146 @@ In addition, based on MAML's model-agnostic property, this approach can be appli
   %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
   \caption{The learning curves of CER on Tamil's LLP (near6)}
 \end{figure}
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/multi6-kurmanji};
+  \addplot+[smooth]table{meta-stat/meta6-kurmanji};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Kurmanji's LLP (near6)}
+\end{figure}
+\end{section}
+
+\newpage
+\begin{section}{Other 3}
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/other3-vietnamese};
+  \addplot+[smooth]table{meta-stat/other3-vietnamese};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Vietnamese's LLP (other3)}
+\end{figure}
+
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/other3-swahili};
+  \addplot+[smooth]table{meta-stat/other3-swahili};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Swahili's LLP (other3)}
+\end{figure}
+
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/other3-Tamil};
+  \addplot+[smooth]table{meta-stat/other3-tamil};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Tamil's LLP (other3)}
+\end{figure}
+
+
+\begin{figure}[htb]
+  \centering
+  %\hspace{-2.2cm}
+  \begin{tikzpicture}[trim axis left, trim axis right]
+
+  \begin{axis}[
+    width=\linewidth,
+    height=6.5cm,
+    legend entries={MultiASR, MetaASR} ,
+    xlabel = {Number of pretraining steps ($\times 1000$)},
+        xmin=5,
+        %xmax=130,
+        grid=both,
+        legend style={at={(0.,.6)},anchor=south west},
+        %legend pos=inner north west,
+        ylabel={CER (\si{\percent}})]
+  \addplot+[smooth]table{multi-stat/other3-kurmanji};
+  \addplot+[smooth]table{meta-stat/other3-kurmanji};
+   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  \end{axis}
+  \end{tikzpicture}
+  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  \caption{The learning curves of CER on Kurmanji's LLP (other3)}
+\end{figure}
+\end{section}
 \end{document}
