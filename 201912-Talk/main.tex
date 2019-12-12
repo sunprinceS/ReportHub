@@ -59,10 +59,10 @@
 
 
 
-\begin{frame}
-\frametitle{Outline}
-\tableofcontents
-\end{frame}
+%\begin{frame}
+%\frametitle{Outline}
+%\tableofcontents
+%\end{frame}
 
 \section{Motivation}
 \begin{frame}{End-to-End Speech Recognition}
@@ -94,7 +94,7 @@
 
   \vspace{1em}
   \pause
-  Can we transfer the knowledge from source languages more effectively to unseen target language (under low-resource scenerio)
+  Can we transfer the knowledge from source languages more effectively to unseen target language (under low-resource scenerio) ?
 
   \vspace{1em}
 
@@ -114,8 +114,14 @@
   \end{itemize}
 \end{frame}
 
-
 \section{Proposed Approach}
+\begin{frame}
+	\begin{center}
+    %\weib{\LARGE{謝謝聆聽！}}
+    \LARGE{Proposed Approach}
+	\end{center}
+\end{frame}
+
 \begin{frame}[t]{Meta-Learning: Learning to Learn}
   We propose the multilingual training scheme based on the algorithm \textbf{Model-Agnostic Meta-Learning (MAML)} (\citealt{finn2017model}),
 
@@ -146,17 +152,20 @@
     \theta^\prime, \theta^\prime_{h,t} = \texttt{Learn}(D_t;\theta^0) & = \arg \, \min_{\theta, \theta_{h,t}} \mathcal{L}_{D_t}(\theta, \theta_{h,t}) \\
   \end{aligned}
 \end{equation*}
-  \vspace{2em}
+  \vspace{1em}
 
+  $\mathcal{L}_{D_t}$: CTC loss on $D$
+
+  \vspace{2em}
   Happened in 
   \begin{itemize}
-    \item Language-specific learning in each meta-learning episode
+    \item Language-specific learning in each meta-training episode
     \item Adaptation
   \end{itemize}
 \end{frame}
 
 \begin{frame}[t]{Meta-Learn}
-  In each meta-learning episode, we sample batch of tasks from $\mathcal{D}$, \\
+  In each meta-training episode, we sample batch of tasks from $\mathcal{D}$, \\
   then sample two subsets from each task $k$ as train/test, $D^{tr}_k, D^{te}_k$.
 
   \begin{enumerate}
@@ -164,10 +173,59 @@
     \item Calculate the loss adapted on $D^{te}_k$, $\mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k})$
     \item Meta-objective: $\mathcal{L}^{\text{meta}}_{\mathcal{D}}(\theta) =  \mathbb{E}_{k \sim \mathcal{D}} \; \mathbb{E}_{D_k^{tr}, D_k^{te}}$ $\Big [ \mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k}) \Big ]$
     \item Use Gradient Descent to minimize $\mathcal{L}^{\text{meta}}_{\mathcal{D}}$ to obtain $\theta^\star$
-
   \end{enumerate}
+  \pause
+  \vspace{2em}
+  \begin{equation*}
+    \theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) 
+  \end{equation*}
 \end{frame}
 
+\section{Experimental Results}
+\begin{frame}
+	\begin{center}
+    %\weib{\LARGE{謝謝聆聽！}}
+    \LARGE{Experimental Results}
+	\end{center}
+\end{frame}
+
+\begin{frame}[t]{Experimental Setting}
+  Corpus: IARPA-BABEL (Conversational Telephone Speech)
+  \begin{itemize}
+    \item FLP: 40 $\sim$ 80 hr
+    \item LLP: 10hr (subset of FLP)
+  \end{itemize}
+  \pause
+  Languages:
+  \begin{itemize}
+    \item Source: Bengali (Bn), Tagalog (Tl), Zulu (Zu), Turkish (Tr), Lithuanian (Lt), Guarani (Gn)
+    \item Target: Vietnamese (Vi), Swahili (Sw), Tamil (Ta), Kurmanji (Ku)
+    \item Validation: Cross-validation
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{CER on FLP}
+  \center \includegraphics[width=1.0\textwidth]{fig/flp_table.png}
+\end{frame}
+
+\begin{frame}[t]{CER on LLP}
+  \center \includegraphics[width=1.0\textwidth]{fig/llp_table.png}
+\end{frame}
+
+\begin{frame}[t]{Learning Curve}
+  \center \includegraphics[width=0.7\textwidth]{fig/lr.png}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+  Meta-learned initialization
+  \begin{itemize}
+    \item overall performance is better than multitask-learned one
+    \item doesn't overfit so easily
+  \end{itemize}
+  \pause
+  \vspace{3em}
+  \center new research direction for speech community
+\end{frame}
 
 %\begin{frame}[t]{Multi Transfer Learning (CER on LLP)}
   %Effect of pretraining step (Vietnamese for example)
@@ -197,7 +255,6 @@
 
 \begin{frame}
 	\begin{center}
-    %\weib{\LARGE{謝謝聆聽！}}
     \LARGE{Q\&A}
 	\end{center}
 \end{frame}
