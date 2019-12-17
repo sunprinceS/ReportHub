@@ -5,7 +5,7 @@
 \label{ssec:multitask-baseline}
 
 %\subsection{Performance Comparison of CER on FLP}
-\textbf{Performance Comparison of CER on FLP}. As presented in Table~\ref{tab:flp-table}, compared to monolingual training (without using pretrained parameters as initialization, denoted as no-pretrain), both MultiASR and MetaASR improve the ASR performance using different combinations of pretraining languages. Table~\ref{tab:flp-table} clearly showed that the proposed MetaASR significantly outperforms MultiASR across all target languages. We are also interested in the impact of the choices of pretraining languages, and the performance variance of MetaASR is smaller than MultiASR. It may due to the fact that MetaASR focuses more on the learning process rather than fitting on source languages. 
+\textbf{Performance Comparison of CER on FLP}. As presented in Table~\ref{tab:flp-table}, compared to monolingual training (without using pretrained parameters as initialization, denoted as no-pretrain), both MultiASR and MetaASR improve the ASR performance using different combinations of pretraining languages. Table~\ref{tab:flp-table} clearly showed that the proposed MetaASR significantly outperforms MultiASR across all target languages. We are also interested in the impact of the choices of pretraining languages, and found that the performance variance of MetaASR is smaller than MultiASR. It may due to the fact that MetaASR focuses more on the learning process rather than fitting on source languages. 
 
 \input{figs/curve1.tex}
 \input{figs/curve2.tex}
@@ -15,7 +15,8 @@
 %\subsection{Training Curves}
 \textbf{Training Curves}. The advantage of MetaASR over MultiASR is clearly shown in Fig.~\ref{fig:curve1} and Fig.~\ref{fig:curve2}. For MultiASR, the performance of adaptation saturates in the early stage and finally degrades.  As Fig.~\ref{fig:meta-idea} illustrated, the training scheme of MultiASR tends to overfit on pretraining languages, and the learned parameters may not be suitable for adaptation. From Fig.~\ref{fig:curve1}, we can see that in the later stage of pretraining, using such pretrained weights even yields worse performance than random initialization. In contrast, for MetaASR, not only the performance is better than MultiASR during the whole pretraining process, but also gradually improves as pretraining continues without degrading. We just pick two of them, but the adaptation of all languages using different pretraining languages have the similar trends.
 
-
+\vspace{5pt}
 \noindent
 %\subsection{Impact on Training Set Size}
-\textbf{Impact on Training Set Size}. We  % 還在想要怎麼說比較好 Q__Q ，因為 meta 帶來的 performance gain 反而是在 FLP 很顯著，LLP 倒看不太出來...，但不放 LLP 的表格， paper 會寫不滿...
+\textbf{Impact on Training Set Size}. In addition to adaptating to FLP of the target languages, we've also fine-tuned on LLP of them, and the result is shown in Table~\ref{tab:llp-table}. On Vietnamese, Swahili and Kurmanji, MetaASR also outperforms MultiASR. Both of them improve the ASR performance, but the performance gap compared to the no-pretrain model is smaller than fine-tuning on FLP. On Tamil, pretrained model is even worse than random initialization, we will evaluate more combinations of target language and pretraining languages to investigate the potential of our proposed method in ultra low-resource scenerio.
+% 還在想要怎麼說比較好 Q__Q ，因為 meta 帶來的 performance gain 反而是在 FLP 很顯著，LLP 倒看不太出來...，但不放 LLP 的表格， paper 會寫不滿...

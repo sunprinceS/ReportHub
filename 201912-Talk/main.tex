@@ -57,55 +57,47 @@
 \maketitle
 \end{frame}
 
-
-
-%\begin{frame}
-%\frametitle{Outline}
-%\tableofcontents
+%\begin{frame}{Multilingual Transfer Learning}
+  %Find a unified latent space for all languages through shared encoder, \\
+  %then use langauge-specific decoder to output token sequence
+  %\center \includegraphics[width=0.5\textwidth]{fig/MultiTaskASR.png}
 %\end{frame}
 
-\section{Motivation}
-\begin{frame}{End-to-End Speech Recognition}
-  Integrate the main modules of ASR system into single end-to-end model
-  \vspace{2em}
 
+\section{Meta Learning}
+\begin{frame}[t]{Meta Learning: Learning to Learn}
+  \begin{block}{Goal}
+    Fast adaptation on unseen task $D_t$ from a set of pretraining tasks $\{ D_k\}^{K}_{k=1}$ 
+  \end{block}
+
+  \pause 
+
+  \begin{itemize}
+    \item Assumption: tasks are inherently related (inductive transfer is beneficial)
+    \item Definition of task $D_k$: depend on application
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{What we meta-learn for?}
+  \centering Meta-learn \textcolor{blue}{X} to improve learn \textcolor{orange}{Y}
   \pause
-
-  However...\\
-  To build such system needs \textbf{huge} amount of (speech, transcription) pairs
+  \flushleft \textcolor{blue}{X} (inductive bias) can be
+  \begin{itemize}
+    \item parameter initialization
+    \item optimization strategy (e.g optimizer)
+    \item network architecture
+    \item distance metric
+    \item hyper-parameter
+  \end{itemize}
+  %$\qquad \cdot$ \\
+  %$\qquad \cdot$ \\
+  %$\qquad \cdot$
 \end{frame}
 
-\begin{frame}{Low-Resouce Speech Recognition}
-  \begin{enumerate}
-    \item Utilizing unpaired monolingual data (Self-/Semi-Supervised Learning)
-    \item Utilizing other languages' paired data (Multilingual Transfer Learning)
-  \end{enumerate}
-\end{frame}
+\begin{frame}[t]{What we meta-learn for?}
+  \centering Meta-learn \textcolor{blue}{X} to improve learn \textcolor{orange}{Y}
 
-\begin{frame}{Multilingual Transfer Learning}
-  Find a unified latent space for all languages through shared encoder, \\
-  then use langauge-specific decoder to output token sequence
-  \center \includegraphics[width=0.5\textwidth]{fig/MultiTaskASR.png}
-\end{frame}
-
-\begin{frame}[t]{Multilingual Transfer Learning}
-  However...\\
-  Sometimes the model would overfitted on the source languages, and cannot adapt well on unseen target language.
-
-  \vspace{1em}
-  \pause
-  Can we transfer the knowledge from source languages more effectively to unseen target language (under low-resource scenerio) ?
-
-  \vspace{1em}
-
-  \pause
-
-  \center \textbf{Fast adaptation on unseen data}
-\end{frame}
-
-\begin{frame}[t]{Meta-Learning: Learning to Learn}
-  Meta-Learning tries to solve \textbf{fast adaptation on unseen data}, \\
-  and has gained some success in
+  \flushleft \textcolor{orange}{Y} (application) can be
   \begin{itemize}
     \item Computer Vision (\citealt{snell2017prototypical}, \citealt{rusu2018meta} ...)
     \item Machine Translation (\citealt{gu2018meta})
@@ -114,72 +106,149 @@
   \end{itemize}
 \end{frame}
 
-\section{Proposed Approach}
+\begin{frame}[t]{What we meta-learn for?}
+  \centering Meta-learn \textcolor{blue}{parameter initialization} \\ to improve learn \textcolor{orange}{End-to-End Speech Recognition}
+
+  \pause
+  \flushleft How to meta-learn \textcolor{blue}{parameter initialization}?
+  \begin{itemize}
+    \item Model-Agnostic Meta-Learning (MAML) (\citealt{finn2017model})
+    \item View different languages' corpus as different tasks
+  \end{itemize}
+
+  \pause
+
+  Why \textcolor{orange}{End-to-End Speech Recognition}?
+  \begin{itemize}
+    \item Voracious for training data
+    \item Low-resource 
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]{Recap: Multilingual Transfer Learning}
+
+  \begin{enumerate}
+    \item Pretraining (Multilingual Training): \\ learn good \textbf{initialization for adaptation} on pretraining langauges
+    \item Adaptation: \\ use the learned initialization to adapt on target language
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[t]{Recap: Multilingual Transfer Learning}
+  We apply MAML in Pretraining stage to
+  \begin{itemize}
+    \item improve overall performance (CER)
+    \item reduce over-fitting on pretraining langauges
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]{Quick Overview of MAML}
+  \begin{block}{Goal}
+    Learn initialization parameters $w^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
+  \end{block}
+
+\end{frame}
+
+\begin{frame}[t]{Quick Overview of MAML}
+  \begin{block}{Meta-objective}
+    \begin{equation*}
+    w^\star = \arg \min_w \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(w - \alpha \nabla \mathcal{L}_{D_k^{tr}}(w))
+    \end{equation*}
+  \end{block}
+
+  \begin{itemize}
+    \item $\mathcal{L}_D$: Loss calculated on $D$
+    \item $D_k^{tr}$, $D_k^{test}$ are disjoint sets of $D_k$
+    %\item Use SGD with $D_k^{tr}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Quick Overview of MAML}
+  \begin{block}{Meta-objective}
+    \begin{equation*}
+    w^\star = \arg \min_w \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(w - \alpha \nabla \mathcal{L}_{D_k^{tr}}(w))
+    \end{equation*}
+  \end{block}
+
+  \begin{itemize}
+    \item Use SGD with $D_k^{tr}$ as update rule (can be more steps)
+    \item Used SGD with independently-sampled $D_k^{test}$ to update the parameters
+  \end{itemize}
+
+  \vspace{1em}
+
+  Intuition: MAML explicitly optimized the loss of the \textbf{adapted} parameters
+\end{frame}
+
 \begin{frame}
 	\begin{center}
-    %\weib{\LARGE{謝謝聆聽！}}
     \LARGE{Proposed Approach}
 	\end{center}
 \end{frame}
 
-\begin{frame}[t]{Meta-Learning: Learning to Learn}
-  We propose the multilingual training scheme based on the algorithm \textbf{Model-Agnostic Meta-Learning (MAML)} (\citealt{finn2017model}),
-
-  \vspace{3em}
-
-  In a nutshell,
-  \begin{enumerate}
-    \item Meta-training: Learn good \textbf{initialization} for adaptation by repeatedly simulating the learning process on source langauges
-    \item Adaptation: use the learned initialization to adapt on target language
-  \end{enumerate}
-\end{frame}
-
+\section{Proposed Approach}
 \begin{frame}[t]{Model Architecture}
   \center \includegraphics[width=0.55\textwidth]{fig/model_arch.png}
 \end{frame}
 
-\begin{frame}[t]{Formulation}
-  Given a set of source langauges $\mathcal{D} = \{D_1, D_2, \cdots D_K \}$ and target language $D_t$
-  \begin{equation*}
-    \theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) = \texttt{Learn}(D_t;\texttt{MetaLearn}(\mathcal{D})).
-  \end{equation*}
-
+\begin{frame}[t]{Baseline: Multitask Training}
+  Step 1:
 \end{frame}
 
-\begin{frame}[t]{Learn}
-\begin{equation*}
-  \begin{aligned}
-    \theta^\prime, \theta^\prime_{h,t} = \texttt{Learn}(D_t;\theta^0) & = \arg \, \min_{\theta, \theta_{h,t}} \mathcal{L}_{D_t}(\theta, \theta_{h,t}) \\
-  \end{aligned}
-\end{equation*}
-  \vspace{1em}
 
-  $\mathcal{L}_{D_t}$: CTC loss on $D$
+%\begin{frame}[t]{Multilingual training scheme}
+  %\begin{itemize}
+    %\item Multitask training: sample one batch from source languages, then perform SGD
+    %\item Meta training: simulate the learning process of sampled source languages to obtain
+    %\item Use $D^{tr}_k$ to simulate the learning process to obtain $\theta^\prime_k$, $\theta^\prime_{h,k}$
+  %\end{itemize}
+%\end{frame}
 
-  \vspace{2em}
-  Happened in 
-  \begin{itemize}
-    \item Language-specific learning in each meta-training episode
-    \item Adaptation
-  \end{itemize}
-\end{frame}
 
-\begin{frame}[t]{Meta-Learn}
-  In each meta-training episode, we sample batch of tasks from $\mathcal{D}$, \\
-  then sample two subsets from each task $k$ as train/test, $D^{tr}_k, D^{te}_k$.
 
-  \begin{enumerate}
-    \item Use $D^{tr}_k$ to simulate the learning process to obtain $\theta^\prime_k$, $\theta^\prime_{h,k}$
-    \item Calculate the loss adapted on $D^{te}_k$, $\mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k})$
-    \item Meta-objective: $\mathcal{L}^{\text{meta}}_{\mathcal{D}}(\theta) =  \mathbb{E}_{k \sim \mathcal{D}} \; \mathbb{E}_{D_k^{tr}, D_k^{te}}$ $\Big [ \mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k}) \Big ]$
-    \item Use Gradient Descent to minimize $\mathcal{L}^{\text{meta}}_{\mathcal{D}}$ to obtain $\theta^\star$
-  \end{enumerate}
-  \pause
-  \vspace{2em}
-  \begin{equation*}
-    \theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) 
-  \end{equation*}
-\end{frame}
+%\begin{frame}[t]{Formulation}
+  %Given a set of source langauges $\mathcal{D} = \{D_1, D_2, \cdots D_K \}$ and target language $D_t$
+  %\begin{equation*}
+    %\theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) = \texttt{Learn}(D_t;\texttt{MetaLearn}(\mathcal{D})).
+  %\end{equation*}
+
+%\end{frame}
+
+%\begin{frame}[t]{Learn}
+%\begin{equation*}
+  %\begin{aligned}
+    %\theta^\prime, \theta^\prime_{h,t} = \texttt{Learn}(D_t;\theta^0) & = \arg \, \min_{\theta, \theta_{h,t}} \mathcal{L}_{D_t}(\theta, \theta_{h,t}) \\
+  %\end{aligned}
+%\end{equation*}
+  %\vspace{1em}
+
+  %$\mathcal{L}_{D_t}$: CTC loss on $D$
+
+  %\vspace{2em}
+  %Happened in 
+  %\begin{itemize}
+    %\item Language-specific learning in each meta-training episode
+    %\item Adaptation
+  %\end{itemize}
+%\end{frame}
+
+%\begin{frame}[t]{Meta-Learn}
+  %In each meta-training episode, we sample batch of tasks from $\mathcal{D}$, \\
+  %then sample two subsets from each task $k$ as train/test, $D^{tr}_k, D^{te}_k$.
+
+  %\begin{enumerate}
+    %\item Use $D^{tr}_k$ to simulate the learning process to obtain $\theta^\prime_k$, $\theta^\prime_{h,k}$
+    %\item Calculate the loss adapted on $D^{te}_k$, $\mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k})$
+    %\item Meta-objective: $\mathcal{L}^{\text{meta}}_{\mathcal{D}}(\theta) =  \mathbb{E}_{k \sim \mathcal{D}} \; \mathbb{E}_{D_k^{tr}, D_k^{te}}$ $\Big [ \mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k}) \Big ]$
+    %\item Use Gradient Descent to minimize $\mathcal{L}^{\text{meta}}_{\mathcal{D}}$ to obtain $\theta^\star$
+  %\end{enumerate}
+  %\pause
+  %\vspace{2em}
+  %\begin{equation*}
+    %\theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) 
+  %\end{equation*}
+%\end{frame}
 
 \section{Experimental Results}
 \begin{frame}

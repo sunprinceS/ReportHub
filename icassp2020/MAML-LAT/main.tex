@@ -58,10 +58,7 @@
 \maketitle
 %
 \begin{abstract}
- (HAVEN'T FINISHED YET)  Besides directly training the model with all the source languages, there are various variants of MultiASR approaches. 
-Language-adversarial training approaches \cite{Yi2018AdversarialMT, adams2019massively} introduce language-adversarial classification objective to the shared encoder, negating the gradients backpropagated from the language classifier to encourage the encoder to extract more language-independent representations. 
-Hierarchical approaches \cite{Sanabria2018HierarchicalMT} introduce different granularity objectives by combining both character and phoneme prediction at different levels of the model.
-In addition, based on MAML's model-agnostic property, this approach can be applied to other network architecture like Seq2seq model, and even different applications other than speech recognition in the speech community.
+  In this paper, we proposed to apply meta learning approach for low-resource automatic speech recognition (ASR). We formulated ASR for different languages as different tasks, and meta-learned the initialization parameters from many pretraining langauges to achieve fast adaptation on unseen language, via recently proposed model-agnostic meta learning method (MAML). We evaluated the proposed approach using six languages as pretraining tasks and four languages as target tasks. Initial results showd that the proposed approach significantly outperforms state-of-the-art multitask pretraining method on all target languages using different combinations of pretraining languages. In addition, since MAML's model-agnostic property, this paper also opens new research direction of applying meta learning to more speech-related applications.
 \end{abstract}
 %
 \begin{keywords}
@@ -76,9 +73,7 @@ In addition, based on MAML's model-agnostic property, this approach can be appli
 
 \section{Conclusion}
 \label{sec:conclusion}
-(HAVEN'T FINISHED YET) In this paper, we proposed the meta learning approach to multilingual pretraining for speech recognition. The initial experimental results showed its potential in pretraining. In future work, We plan to use more languages (from IARPA BABEL or other corpora) and different combinations for pretraining to evaluate the effectiveness of MetaASR more extensively. 
-
-In addition, based on MAML's model-agnostic property, this approach can be applied to other network architecture like Seq2seq model, and even different applications other than speech recognition in the speech community.
+In this paper, we proposed a meta learning approach to multilingual pretraining for speech recognition. The initial experimental results showed its potential in multilingual pretraining. We plan to use more combinations of languages and corpora to evaluate the effectiveness of MetaASR more extensively as the future work. In addition, based on MAML's model-agnostic property, this approach can be applied to a wide range of network architectures like Seq2seq model, and even different applications beyond speech recognition in the speech community.
 
 % Below is an example of how to insert images. Delete the ``\vspace'' line,
 % uncomment the preceding line ``\centerline...'' and replace ``imageX.ps''
@@ -98,349 +93,349 @@ In addition, based on MAML's model-agnostic property, this approach can be appli
 % BiBTeX files (here: strings, refs, manuals). The IEEEbib.bst bibliography
 % style file from IEEE produces unsorted bibliography list.
 % -------------------------------------------------------------------------
-\bibliographystyle{IEEEbib}
 \newpage
-\bibliography{strings,refs}
+\bibliographystyle{IEEEbib}
+\bibliography{refs}
 
 % 以下不會放到 paper ，只是畫一些圖出來而已
 %\newpage
-\section{Appendix (WON'T PUT ON PAPER)}
+%\section{Appendix (WON'T PUT ON PAPER)}
 
-\newpage
-% NEAR3
-\begin{section}{Near 3}
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\newpage
+%% NEAR3
+%\begin{section}{Near 3}
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi3-vietnamese};
-  \addplot+[smooth]table{meta-stat/meta3-vietnamese};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Vietnamese's LLP (near3)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi3-vietnamese};
+  %\addplot+[smooth]table{meta-stat/meta3-vietnamese};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Vietnamese's LLP (near3)}
+%\end{figure}
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi3-swahili};
-  \addplot+[smooth]table{meta-stat/meta3-swahili};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Swahili's LLP (near3)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi3-swahili};
+  %\addplot+[smooth]table{meta-stat/meta3-swahili};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Swahili's LLP (near3)}
+%\end{figure}
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi3-tamil};
-  \addplot+[smooth]table{meta-stat/meta3-tamil};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Tamil's LLP (near3)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi3-tamil};
+  %\addplot+[smooth]table{meta-stat/meta3-tamil};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Tamil's LLP (near3)}
+%\end{figure}
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi3-kurmanji};
-  \addplot+[smooth]table{meta-stat/meta3-kurmanji};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Kurmanji's LLP (near3)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi3-kurmanji};
+  %\addplot+[smooth]table{meta-stat/meta3-kurmanji};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Kurmanji's LLP (near3)}
+%\end{figure}
 
-\end{section}
-\newpage
-%% NEAR 6
-\begin{section}{Near 6}
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\end{section}
+%\newpage
+%%% NEAR 6
+%\begin{section}{Near 6}
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi6-vietnamese};
-  \addplot+[smooth]table{meta-stat/meta6-vietnamese};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Vietnamese's LLP (near6)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi6-vietnamese};
+  %\addplot+[smooth]table{meta-stat/meta6-vietnamese};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Vietnamese's LLP (near6)}
+%\end{figure}
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi6-swahili};
-  \addplot+[smooth]table{meta-stat/meta6-swahili};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Swahili's LLP (near6)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi6-swahili};
+  %\addplot+[smooth]table{meta-stat/meta6-swahili};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Swahili's LLP (near6)}
+%\end{figure}
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi6-tamil};
-  \addplot+[smooth]table{meta-stat/meta6-tamil};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Tamil's LLP (near6)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi6-tamil};
+  %\addplot+[smooth]table{meta-stat/meta6-tamil};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Tamil's LLP (near6)}
+%\end{figure}
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/multi6-kurmanji};
-  \addplot+[smooth]table{meta-stat/meta6-kurmanji};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Kurmanji's LLP (near6)}
-\end{figure}
-\end{section}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/multi6-kurmanji};
+  %\addplot+[smooth]table{meta-stat/meta6-kurmanji};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Kurmanji's LLP (near6)}
+%\end{figure}
+%\end{section}
 
-\newpage
-\begin{section}{Other 3}
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\newpage
+%\begin{section}{Other 3}
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/other3-vietnamese};
-  \addplot+[smooth]table{meta-stat/other3-vietnamese};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Vietnamese's LLP (other3)}
-\end{figure}
-
-
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
-
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/other3-swahili};
-  \addplot+[smooth]table{meta-stat/other3-swahili};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Swahili's LLP (other3)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/other3-vietnamese};
+  %\addplot+[smooth]table{meta-stat/other3-vietnamese};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Vietnamese's LLP (other3)}
+%\end{figure}
 
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/other3-Tamil};
-  \addplot+[smooth]table{meta-stat/other3-tamil};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Tamil's LLP (other3)}
-\end{figure}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/other3-swahili};
+  %\addplot+[smooth]table{meta-stat/other3-swahili};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Swahili's LLP (other3)}
+%\end{figure}
 
 
-\begin{figure}[htb]
-  \centering
-  %\hspace{-2.2cm}
-  \begin{tikzpicture}[trim axis left, trim axis right]
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
 
-  \begin{axis}[
-    width=\linewidth,
-    height=6.5cm,
-    legend entries={MultiASR, MetaASR} ,
-    xlabel = {Number of pretraining steps ($\times 1000$)},
-        xmin=5,
-        %xmax=130,
-        grid=both,
-        legend style={at={(0.,.6)},anchor=south west},
-        %legend pos=inner north west,
-        ylabel={CER (\si{\percent}})]
-  \addplot+[smooth]table{multi-stat/other3-kurmanji};
-  \addplot+[smooth]table{meta-stat/other3-kurmanji};
-   %\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
-   %\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
-   %\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
-  \end{axis}
-  \end{tikzpicture}
-  %\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
-  \caption{The learning curves of CER on Kurmanji's LLP (other3)}
-\end{figure}
-\end{section}
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/other3-Tamil};
+  %\addplot+[smooth]table{meta-stat/other3-tamil};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Tamil's LLP (other3)}
+%\end{figure}
+
+
+%\begin{figure}[htb]
+  %\centering
+  %%\hspace{-2.2cm}
+  %\begin{tikzpicture}[trim axis left, trim axis right]
+
+  %\begin{axis}[
+    %width=\linewidth,
+    %height=6.5cm,
+    %legend entries={MultiASR, MetaASR} ,
+    %xlabel = {Number of pretraining steps ($\times 1000$)},
+        %xmin=5,
+        %%xmax=130,
+        %grid=both,
+        %legend style={at={(0.,.6)},anchor=south west},
+        %%legend pos=inner north west,
+        %ylabel={CER (\si{\percent}})]
+  %\addplot+[smooth]table{multi-stat/other3-kurmanji};
+  %\addplot+[smooth]table{meta-stat/other3-kurmanji};
+   %%\addplot[style=ultra thick,dashed,] coordinates {(0,0.557) (200,0.557)};
+   %%\addplot[style=ultra thick,dashed, gray] coordinates {(0,0.589) (200,0.589)};
+   %%\addplot[style=ultra thick,dashed, brown] coordinates {(0,0.628) (200,0.628)};
+  %\end{axis}
+  %\end{tikzpicture}
+  %%\caption{Pretrain on EN, FI, FR, NL, RM, RU, and evaluate on }
+  %\caption{The learning curves of CER on Kurmanji's LLP (other3)}
+%\end{figure}
+%\end{section}
 \end{document}
