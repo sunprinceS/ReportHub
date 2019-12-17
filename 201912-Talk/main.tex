@@ -277,53 +277,94 @@
 \begin{frame}[t]{CER on FLP}
   Refer to Question 1
   \center \includegraphics[width=1.0\textwidth]{fig/flp_table.png}
+
+  \begin{itemize}
+    \item Adaptation from MetaASR performs better than random initialization
+    \item Fix pretraining languages and target language, MetaASR is always better than MultiASR
+  \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Learning Curve}
-  Refer to Question 2 \& 3
-  \center \includegraphics[width=0.7\textwidth]{fig/lr.png}
+%\begin{frame}[t]{Learning Curve}
+  %Refer to Question 2 \& 3
+  %\center \includegraphics[width=0.7\textwidth]{fig/lr.png}
+%\end{frame}
+
+%\begin{frame}[t]{Conclusion}
+  %Meta-learned initialization
+  %\begin{itemize}
+    %\item overall performance is better than multitask-learned one
+    %\item doesn't overfit so easily
+  %\end{itemize}
+  %\pause
+  %\vspace{3em}
+  %\center new research direction for speech community
+%\end{frame}
+
+\begin{frame}[t]{Learning Curve (dev cer on LLP)}
+  Pretraining Languages: Bn, Tl, Zu; Target Language: Vi
+
+    \begin{figure}[H]
+    \centering
+    %\hspace{-5.2cm}
+    \begin{tikzpicture}[trim axis left, trim axis right]
+
+    \begin{axis}[
+      width=1.0\linewidth,
+      height=0.5\linewidth,
+      legend entries={MetaASR, MultiASR, MultiASR (uniform), no-pretrain},
+      legend style={cells={anchor=west}, at={(0.3,-0.1)}, font=\tiny},
+      xlabel = {Pretraining steps ($\times 10^3$)},
+          xmin=0,
+          xmax=100,
+          grid=both,
+          ylabel={CER}]
+    \addplot+[smooth]table{stat/107-near3/fomaml-107-devcer};
+    \addplot+[smooth]table{stat/107-near3/multi-107-devcer};
+    \addplot+[smooth]table{stat/107-near3/reptile-107-devcer};
+    \addplot[style=ultra thick,dashed,] coordinates {(0,58.9) (100,58.9)};
+    \end{axis}
+    \end{tikzpicture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Learning Curve (dev cer on LLP)}
+  Pretraining Languages: Bn, Tl, Zu; Target Language: Sw
+
+    \begin{figure}[H]
+    \centering
+    %\hspace{-5.2cm}
+    \begin{tikzpicture}[trim axis left, trim axis right]
+
+    \begin{axis}[
+      width=1.0\linewidth,
+      height=0.5\linewidth,
+      legend entries={MetaASR, MultiASR, MultiASR (uniform), no-pretrain},
+      legend style={cells={anchor=west}, at={(0.3,-0.1)}, font=\tiny},
+      xlabel = {Pretraining steps ($\times 10^3$)},
+          xmin=0,
+          xmax=100,
+          grid=both,
+          ylabel={CER}]
+    \addplot+[smooth]table{stat/107-near3/fomaml-202-devcer};
+    \addplot+[smooth]table{stat/107-near3/multi-202-devcer};
+    \addplot+[smooth]table{stat/107-near3/reptile-202-devcer};
+    \addplot[style=ultra thick,dashed,] coordinates {(0,42.1) (100,42.1)};
+    \end{axis}
+    \end{tikzpicture}
+  \end{figure}
 \end{frame}
 
 \begin{frame}[t]{Conclusion}
-  Meta-learned initialization
   \begin{itemize}
-    \item overall performance is better than multitask-learned one
-    \item doesn't overfit so easily
+    \item Adaptation using meta-learned parameter is beneficial
+    \item Can be applied to different applications beyond ASR
+    \item Need more analysis of the performance gain
   \end{itemize}
-  \pause
-  \vspace{3em}
-  \center new research direction for speech community
 \end{frame}
-
-%\begin{frame}[t]{Multi Transfer Learning (CER on LLP)}
-  %Effect of pretraining step (Vietnamese for example)
-
-    %\begin{figure}[H]
-    %\centering
-    %%\hspace{-5.2cm}
-    %\begin{tikzpicture}[trim axis left, trim axis right]
-
-    %\begin{axis}[
-      %width=1.0\linewidth,
-      %height=0.5\linewidth,
-      %legend entries={PHN-near3, PHN-far3},
-      %xlabel = {Number of pretraining steps ($\times 10^3$)},
-          %xmin=-5,
-          %xmax=200,
-          %grid=both,
-          %legend pos=inner north east,
-          %ylabel={CER}]
-    %\addplot+[smooth]table{stat/phn_near3};
-    %\addplot+[smooth]table{stat/phn_far3};
-    %\end{axis}
-    %\end{tikzpicture}
-  %\end{figure}
-
-%\end{frame}
 
 \begin{frame}
 	\begin{center}
-    \LARGE{Q\&A}
+    \LARGE{Discussion}
 	\end{center}
 \end{frame}
 
