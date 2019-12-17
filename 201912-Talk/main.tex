@@ -145,7 +145,7 @@
 
 \begin{frame}[t]{Quick Overview of MAML}
   \begin{block}{Goal}
-    Learn initialization parameters $w^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
+    Learn initialization parameters $\theta^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
   \end{block}
 
 \end{frame}
@@ -153,7 +153,7 @@
 \begin{frame}[t]{Quick Overview of MAML}
   \begin{block}{Meta-objective}
     \begin{equation*}
-    w^\star = \arg \min_w \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(w - \alpha \nabla \mathcal{L}_{D_k^{tr}}(w))
+    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla \mathcal{L}_{D_k^{tr}}(\theta))
     \end{equation*}
   \end{block}
 
@@ -167,7 +167,7 @@
 \begin{frame}[t]{Quick Overview of MAML}
   \begin{block}{Meta-objective}
     \begin{equation*}
-    w^\star = \arg \min_w \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(w - \alpha \nabla \mathcal{L}_{D_k^{tr}}(w))
+    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla \mathcal{L}_{D_k^{tr}}(\theta))
     \end{equation*}
   \end{block}
 
@@ -192,70 +192,71 @@
   \center \includegraphics[width=0.55\textwidth]{fig/model_arch.png}
 \end{frame}
 
-\begin{frame}[t]{Baseline: Multitask Training}
-  Step 1:
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
+  %\only<1-2> \center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
+  %\only<2-3> \center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
+  %\only<3> \center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
 \end{frame}
 
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
+\end{frame}
 
-%\begin{frame}[t]{Multilingual training scheme}
-  %\begin{itemize}
-    %\item Multitask training: sample one batch from source languages, then perform SGD
-    %\item Meta training: simulate the learning process of sampled source languages to obtain
-    %\item Use $D^{tr}_k$ to simulate the learning process to obtain $\theta^\prime_k$, $\theta^\prime_{h,k}$
-  %\end{itemize}
-%\end{frame}
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
+\end{frame}
 
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient finished)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_before_update.png}
+\end{frame}
 
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 \textcolor{red}{Update}
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_update.png}
+\end{frame}
 
-%\begin{frame}[t]{Formulation}
-  %Given a set of source langauges $\mathcal{D} = \{D_1, D_2, \cdots D_K \}$ and target language $D_t$
-  %\begin{equation*}
-    %\theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) = \texttt{Learn}(D_t;\texttt{MetaLearn}(\mathcal{D})).
-  %\end{equation*}
-
-%\end{frame}
-
-%\begin{frame}[t]{Learn}
-%\begin{equation*}
-  %\begin{aligned}
-    %\theta^\prime, \theta^\prime_{h,t} = \texttt{Learn}(D_t;\theta^0) & = \arg \, \min_{\theta, \theta_{h,t}} \mathcal{L}_{D_t}(\theta, \theta_{h,t}) \\
-  %\end{aligned}
-%\end{equation*}
-  %\vspace{1em}
-
-  %$\mathcal{L}_{D_t}$: CTC loss on $D$
-
-  %\vspace{2em}
-  %Happened in 
-  %\begin{itemize}
-    %\item Language-specific learning in each meta-training episode
-    %\item Adaptation
-  %\end{itemize}
-%\end{frame}
-
-%\begin{frame}[t]{Meta-Learn}
-  %In each meta-training episode, we sample batch of tasks from $\mathcal{D}$, \\
-  %then sample two subsets from each task $k$ as train/test, $D^{tr}_k, D^{te}_k$.
-
-  %\begin{enumerate}
-    %\item Use $D^{tr}_k$ to simulate the learning process to obtain $\theta^\prime_k$, $\theta^\prime_{h,k}$
-    %\item Calculate the loss adapted on $D^{te}_k$, $\mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k})$
-    %\item Meta-objective: $\mathcal{L}^{\text{meta}}_{\mathcal{D}}(\theta) =  \mathbb{E}_{k \sim \mathcal{D}} \; \mathbb{E}_{D_k^{tr}, D_k^{te}}$ $\Big [ \mathcal{L}_{D^{te}_k}(\theta^\prime_k, \theta^\prime_{h,k}) \Big ]$
-    %\item Use Gradient Descent to minimize $\mathcal{L}^{\text{meta}}_{\mathcal{D}}$ to obtain $\theta^\star$
-  %\end{enumerate}
-  %\pause
-  %\vspace{2em}
-  %\begin{equation*}
-    %\theta^{\star}_t, \theta^{\star}_{h,t} = \texttt{Learn}(D_t;\theta^{\star}) 
-  %\end{equation*}
-%\end{frame}
-
-\section{Experimental Results}
 \begin{frame}
 	\begin{center}
-    %\weib{\LARGE{謝謝聆聽！}}
-    \LARGE{Experimental Results}
+    \LARGE{In contrast to Multitask Training}
 	\end{center}
+\end{frame}
+
+\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+  Multitask training (MultiASR) acts as main backbone in multilingual pretraining
+  \vspace{2em}
+  \begin{enumerate}
+    \item Random draw one sample in one pretraining langauge \\ (either uniform sampling or $\propto$ corpus size)
+    \item Update through SGD on that sample
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+  Step 1 
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_step1.png}
+\end{frame}
+
+\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+  Step 2 
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_step2.png}
+\end{frame}
+
+\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+  Step 3 
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_step3.png}
+\end{frame}
+
+\section{Experimental Results}
+\begin{frame}[t]{Questions we care about}
+  \begin{enumerate}
+    \item Is adaptation performance of MetaASR better than MultiASR ?
+    \item Is MetaASR avoid over-fitting on pretraining languages (unlike MultiASR)?
+    \item If MultiASR equipped with uniform sampling strategy (like MetaASR), is 2 still true?
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}[t]{Experimental Setting}
@@ -274,14 +275,12 @@
 \end{frame}
 
 \begin{frame}[t]{CER on FLP}
+  Refer to Question 1
   \center \includegraphics[width=1.0\textwidth]{fig/flp_table.png}
 \end{frame}
 
-\begin{frame}[t]{CER on LLP}
-  \center \includegraphics[width=1.0\textwidth]{fig/llp_table.png}
-\end{frame}
-
 \begin{frame}[t]{Learning Curve}
+  Refer to Question 2 \& 3
   \center \includegraphics[width=0.7\textwidth]{fig/lr.png}
 \end{frame}
 
