@@ -32,10 +32,11 @@
       %\insertauthor
     %\end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.9\paperwidth,ht=3ex,dp=1.75ex,left]{section in head/foot}
-      $\; \;$ Meta Learning for Low-Resource Speech Recognition
+      $\; \;$ Meta Learning for End-to-End Low-Resource Speech Recognition
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=3ex,dp=1.75ex,center]{number in head/foot}
-      \insertframenumber\ /\ \inserttotalframenumber
+      %\insertframenumber\ /\ \inserttotalframenumber
+      \insertframenumber
     \end{beamercolorbox}%
   }
 }
@@ -100,6 +101,7 @@
   \flushleft \textcolor{orange}{Y} (application) can be
   \begin{itemize}
     \item Computer Vision (\citealt{snell2017prototypical}, \citealt{rusu2018meta} ...)
+    \item Reinforcement Learning (\citealt{eysenbach2018diversity}, \citealt{xu2018meta} ...)
     \item Machine Translation (\citealt{gu2018meta})
     \item Dialogue Generation (\citealt{mi2019meta})
     \item Speaker-Adaptative Training (\citealt{klejch2019speaker})
@@ -113,7 +115,7 @@
   \flushleft How to meta-learn \textcolor{blue}{parameter initialization}?
   \begin{itemize}
     \item Model-Agnostic Meta-Learning (MAML) (\citealt{finn2017model})
-    \item View different languages' corpus as different tasks
+    \item View different languages' as different tasks
   \end{itemize}
 
   \pause
@@ -235,24 +237,24 @@
   \end{enumerate}
 \end{frame}
 
-\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+\begin{frame}[t]{Illustration of 1 step in MultiASR}
   Step 1 
   \center \includegraphics[width=0.85\textwidth]{fig/multi_step1.png}
 \end{frame}
 
-\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+\begin{frame}[t]{Illustration of 1 step in MultiASR}
   Step 2 
   \center \includegraphics[width=0.85\textwidth]{fig/multi_step2.png}
 \end{frame}
 
-\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+\begin{frame}[t]{Illustration of 1 step in MultiASR}
   Step 3 
   \center \includegraphics[width=0.85\textwidth]{fig/multi_step3.png}
 \end{frame}
 
 \section{Experimental Results}
 \begin{frame}[t]{Questions we care about}
-  \begin{enumerate}
+  \begin{enumerate}[<+->]
     \item Is adaptation performance of MetaASR better than MultiASR ?
     \item Is MetaASR avoid over-fitting on pretraining languages (unlike MultiASR)?
     \item If MultiASR equipped with uniform sampling strategy (like MetaASR), is 2 still true?
@@ -280,32 +282,15 @@
 
   \begin{itemize}
     \item Adaptation from MetaASR performs better than random initialization
-    \item Fix pretraining languages and target language, MetaASR is always better than MultiASR
+    \item In each (pretraining languages, target language) pairs, MetaASR is always better than MultiASR
   \end{itemize}
 \end{frame}
-
-%\begin{frame}[t]{Learning Curve}
-  %Refer to Question 2 \& 3
-  %\center \includegraphics[width=0.7\textwidth]{fig/lr.png}
-%\end{frame}
-
-%\begin{frame}[t]{Conclusion}
-  %Meta-learned initialization
-  %\begin{itemize}
-    %\item overall performance is better than multitask-learned one
-    %\item doesn't overfit so easily
-  %\end{itemize}
-  %\pause
-  %\vspace{3em}
-  %\center new research direction for speech community
-%\end{frame}
 
 \begin{frame}[t]{Learning Curve (dev cer on LLP)}
   Pretraining Languages: Bn, Tl, Zu; Target Language: Vi
 
     \begin{figure}[H]
     \centering
-    %\hspace{-5.2cm}
     \begin{tikzpicture}[trim axis left, trim axis right]
 
     \begin{axis}[
@@ -332,7 +317,6 @@
 
     \begin{figure}[H]
     \centering
-    %\hspace{-5.2cm}
     \begin{tikzpicture}[trim axis left, trim axis right]
 
     \begin{axis}[
@@ -354,11 +338,11 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}[t]{Conclusion}
+\begin{frame}[t]{Conclusion \& Future Work}
   \begin{itemize}
     \item Adaptation using meta-learned parameter is beneficial
     \item Can be applied to different applications beyond ASR
-    \item Need more analysis of the performance gain
+    \item Need more analysis of where the performance gain comes from
   \end{itemize}
 \end{frame}
 
@@ -366,6 +350,17 @@
 	\begin{center}
     \LARGE{Discussion}
 	\end{center}
+\end{frame}
+
+\section{Appendix}
+\begin{frame}[t]{CER on LLP}
+  Refer to Question 1
+  \center \includegraphics[width=1.0\textwidth]{fig/flp_table.png}
+
+  \begin{itemize}
+    \item Adaptation from MetaASR performs better than random initialization
+    \item In each (pretraining languages, target language) pairs, MetaASR is always better than MultiASR
+  \end{itemize}
 \end{frame}
 
 \bibliographystyle{plainnat}
