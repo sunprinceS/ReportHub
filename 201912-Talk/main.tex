@@ -155,7 +155,7 @@
 \begin{frame}[t]{Quick Overview of MAML}
   \begin{block}{Meta-objective}
     \begin{equation*}
-    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla \mathcal{L}_{D_k^{tr}}(\theta))
+    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
     \end{equation*}
   \end{block}
 
@@ -169,7 +169,7 @@
 \begin{frame}[t]{Quick Overview of MAML}
   \begin{block}{Meta-objective}
     \begin{equation*}
-    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla \mathcal{L}_{D_k^{tr}}(\theta))
+    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
     \end{equation*}
   \end{block}
 
@@ -278,7 +278,16 @@
 
 \begin{frame}[t]{CER on FLP}
   Refer to Question 1
-  \center \includegraphics[width=1.0\textwidth]{fig/flp_table.png}
+  \center \includegraphics[width=1.0\textwidth]{fig/flp_hl1.png}
+
+  \begin{itemize}
+    \item Adaptation from MetaASR performs better than random initialization
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{CER on FLP}
+  Refer to Question 1
+  \center \includegraphics[width=1.0\textwidth]{fig/flp_hl2.png}
 
   \begin{itemize}
     \item Adaptation from MetaASR performs better than random initialization
@@ -354,15 +363,99 @@
 
 \section{Appendix}
 \begin{frame}[t]{CER on LLP}
-  Refer to Question 1
-  \center \includegraphics[width=1.0\textwidth]{fig/flp_table.png}
-
-  \begin{itemize}
-    \item Adaptation from MetaASR performs better than random initialization
-    \item In each (pretraining languages, target language) pairs, MetaASR is always better than MultiASR
-  \end{itemize}
+  \center \includegraphics[width=1.0\textwidth]{fig/llp_table.png}
 \end{frame}
 
+\begin{frame}[t]{First Order Approximation - FOMAML}
+  To avoid computation and memory burden when calculating higher order gradients
+  \begin{block}{Original Meta-Update}
+    \begin{equation*}
+      \theta \leftarrow \theta - \eta \sum_k \nabla_\theta \mathcal{L}_{D^{test}_k}(\theta^\prime)
+    \end{equation*}
+  \end{block}
+  \begin{block}{Approximated Meta-Update}
+    \begin{equation*}
+      \theta \leftarrow \theta - \eta \sum_k \nabla_{\textcolor{red}{\theta^\prime}} \mathcal{L}_{D^{test}_k}(\theta^\prime)
+    \end{equation*}
+    \center where $\theta^\prime = \theta - \alpha \nabla_\theta \mathcal{L}_{D^{tr}_k} (\theta)$
+  \end{block}
+\end{frame}
+
+\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
+
+  \begin{equation*}
+    f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
+  \end{equation*}
+
+  Want: minimize $f_k(\mathbf{w})$
+\end{frame}
+
+\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
+
+  \begin{equation*}
+    f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
+  \end{equation*}
+
+  %Want: minimize $f_k(\mathbf{w})$
+  For multitask learner, it's equivalent to minimize $F(\mathbf{w})$
+
+  \begin{equation*}
+    F(\mathbf{w}) =  \frac{1}{2} \mathbf{w}^T \bar{\mathbf{A}} \mathbf{w} + \mathbf{w}^T \bar{\mathbf{b}}
+  \end{equation*}
+  where $\bar{\mathbf{A}} = \frac{1}{K}\sum_k \mathbf{A}_k$, $\bar{\mathbf{b}} = \frac{1}{K}\sum_k \mathbf{b}_k$
+
+  \center $\boxed{w^\star_{\text{multi}} = - \bar{\mathbf{A}}^{-1}\bar{\mathbf{b}}}$
+\end{frame}
+
+\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
+
+  \begin{equation*}
+    f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
+  \end{equation*}
+
+  %Want: minimize $f_k(\mathbf{w})$
+  For meta learner (MAML with 1 gradient step), it's equivalent to minimize
+
+  \begin{equation*}
+    F(\mathbf{w}) =  \frac{1}{K} \sum_k f_k(\mathbf{w} - \alpha \nabla f_k(\mathbf{w})) 
+  \end{equation*}
+\end{frame}
+
+\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  \begin{block}{Objective}
+  \begin{equation*}
+    F(\mathbf{w}) =  \frac{1}{K} \sum_k f_k(\mathbf{w} - \alpha \nabla f_k(\mathbf{w})) 
+  \end{equation*}
+  \end{block}
+
+    $f_k(\mathbf{w} - \alpha \nabla f_k (\mathbf{w})) = \frac{1}{2}(\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k)^T \mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k) + (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k) \mathbf{b}_k$
+    \vspace{1em}
+
+    $\begin{aligned}
+      \nabla_\mathbf{w} f_k(\mathbf{w}^\prime) & = \big( \mathbf{I} - \alpha \mathbf{A}_k \big) \big(\mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w}-\alpha \mathbf{b}_k) + \mathbf{b}_k \big) \\
+                                               & = ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{A}_k ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{w} + (\mathbf{I} - \alpha \mathbf{A}_k)^2 \mathbf{b}_k
+    \end{aligned}$
+\end{frame}
+
+\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+    $\begin{aligned}
+      \nabla_\mathbf{w} f_k(\mathbf{w}^\prime) & = \big( \mathbf{I} - \alpha \mathbf{A}_k \big) \big(\mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w}-\alpha \mathbf{b}_k) + \mathbf{b}_k \big) \\
+                                               & = ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{A}_k ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{w} + (\mathbf{I} - \alpha \mathbf{A}_k)^2 \mathbf{b}_k
+    \end{aligned}$
+
+    \vspace{1em}
+
+  For meta learner (MAML with 1 gradient step), it's equivalent to minimize
+  \begin{equation*}
+    F(\mathbf{w}) =  \frac{1}{2} \mathbf{w}^T \tilde{\mathbf{A}} \mathbf{w} + \mathbf{w}^T \tilde{\mathbf{b}}
+  \end{equation*}
+  where $\tilde{\mathbf{A}} = \frac{1}{K}\sum_k \big( \mathbf{I} - \alpha \mathbf{A}_k \big)^2 \mathbf{A}_k$, $\tilde{\mathbf{b}} = \frac{1}{K}\sum_k \big( \mathbf{I} - \alpha \mathbf{A}_k \big)^2\mathbf{b}_k$
+
+  \center $\boxed{w^\star_{\text{meta}} = - \tilde{\mathbf{A}}^{-1}\tilde{\mathbf{b}}}$
+\end{frame}
 \bibliographystyle{plainnat}
 \bibliography{M335}
 
