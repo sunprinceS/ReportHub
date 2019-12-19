@@ -25,6 +25,8 @@
 \pgfplotsset{compat=1.13}
 
 \usetheme{EastLansing}
+\definecolor{navy}{RGB}{0,0,205}
+\definecolor{tomato}{RGB}{0,128,0}
 
 \setbeamertemplate{footline}{%
   \hbox{%
@@ -58,13 +60,6 @@
 \maketitle
 \end{frame}
 
-%\begin{frame}{Multilingual Transfer Learning}
-  %Find a unified latent space for all languages through shared encoder, \\
-  %then use langauge-specific decoder to output token sequence
-  %\center \includegraphics[width=0.5\textwidth]{fig/MultiTaskASR.png}
-%\end{frame}
-
-
 \section{Meta Learning}
 \begin{frame}[t]{Meta Learning: Learning to Learn}
   \begin{block}{Goal}
@@ -80,9 +75,9 @@
 \end{frame}
 
 \begin{frame}[t]{What we meta-learn for?}
-  \centering Meta-learn \textcolor{blue}{X} to improve learn \textcolor{orange}{Y}
+  \centering Meta-learn \textcolor{navy}{X} to improve learn \textcolor{tomato}{Y}
   \pause
-  \flushleft \textcolor{blue}{X} (inductive bias) can be
+  \flushleft \textcolor{navy}{X} (what people have to decide in learning algorithm) can be
   \begin{itemize}
     \item parameter initialization
     \item optimization strategy (e.g optimizer)
@@ -90,15 +85,12 @@
     \item distance metric
     \item hyper-parameter
   \end{itemize}
-  %$\qquad \cdot$ \\
-  %$\qquad \cdot$ \\
-  %$\qquad \cdot$
 \end{frame}
 
 \begin{frame}[t]{What we meta-learn for?}
-  \centering Meta-learn \textcolor{blue}{X} to improve learn \textcolor{orange}{Y}
+  \centering Meta-learn \textcolor{navy}{X} to improve learn \textcolor{tomato}{Y}
 
-  \flushleft \textcolor{orange}{Y} (application) can be
+  \flushleft \textcolor{tomato}{Y} (application) can be
   \begin{itemize}
     \item Computer Vision (\citealt{snell2017prototypical}, \citealt{rusu2018meta} ...)
     \item Reinforcement Learning (\citealt{eysenbach2018diversity}, \citealt{xu2018meta} ...)
@@ -109,10 +101,10 @@
 \end{frame}
 
 \begin{frame}[t]{What we meta-learn for?}
-  \centering Meta-learn \textcolor{blue}{parameter initialization} \\ to improve learn \textcolor{orange}{End-to-End Speech Recognition}
+  \centering Meta-learn \textcolor{navy}{parameter initialization} \\ to improve learn \textcolor{tomato}{End-to-End Speech Recognition}
 
   \pause
-  \flushleft How to meta-learn \textcolor{blue}{parameter initialization}?
+  \flushleft How to meta-learn \textcolor{navy}{parameter initialization}?
   \begin{itemize}
     \item Model-Agnostic Meta-Learning (MAML) (\citealt{finn2017model})
     \item View different languages' as different tasks
@@ -120,7 +112,7 @@
 
   \pause
 
-  Why \textcolor{orange}{End-to-End Speech Recognition}?
+  Why \textcolor{tomato}{End-to-End Speech Recognition}?
   \begin{itemize}
     \item Voracious for training data
     \item Low-resource 
@@ -131,136 +123,110 @@
 \begin{frame}[t]{Recap: Multilingual Transfer Learning}
 
   \begin{enumerate}
-    \item Pretraining (Multilingual Training): \\ learn good \textbf{initialization for adaptation} on pretraining langauges
+    \item Pretraining (Multilingual Training): \\ learn good \textbf{initialization for adaptation} on source langauges
     \item Adaptation: \\ use the learned initialization to adapt on target language
   \end{enumerate}
 \end{frame}
 
-\begin{frame}[t]{Recap: Multilingual Transfer Learning}
-  We apply MAML in Pretraining stage to
-  \begin{itemize}
-    \item improve overall performance (CER)
-    \item reduce over-fitting on pretraining langauges
-  \end{itemize}
+\section{Proposed Approach}
+\begin{frame}[t]{Idea}
+	\begin{center}
+    \LARGE{We apply MAML in Pretraining stage}
+	\end{center}
+
+  \vspace{3em}
+  (instead of previously used multitask training)
 \end{frame}
 
+\begin{frame}[t]{Motivation}
+	\begin{center}
+    \LARGE{Multitask training (MultiASR)}
+	\end{center}
+  \vspace{3em}
+  $\rightarrow$ find parameters best for all source langauges
 
-\begin{frame}[t]{Quick Overview of MAML}
-  \begin{block}{Goal}
-    Learn initialization parameters $\theta^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
-  \end{block}
+  \begin{equation*}
+    \theta_{\text{multi}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\theta)
+  \end{equation*}
 
+  $\mathcal{L}_D$: loss calculated on $D$
 \end{frame}
 
-\begin{frame}[t]{Quick Overview of MAML}
-  \begin{block}{Meta-objective}
-    \begin{equation*}
-    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
-    \end{equation*}
-  \end{block}
+\begin{frame}[t]{Motivation}
+	\begin{center}
+    \LARGE{MAML training (MetaASR)}
+	\end{center}
+  \vspace{3em}
+  $\rightarrow$ find parameters best \textbf{after adaptation} on all source langauges
 
-  \begin{itemize}
-    \item $\mathcal{L}_D$: Loss calculated on $D$
-    \item $D_k^{tr}$, $D_k^{test}$ are disjoint sets of $D_k$
-    %\item Use SGD with $D_k^{tr}$
-  \end{itemize}
-\end{frame}
+  \begin{equation*}
+    \theta_{\text{meta}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\textcolor{red}{\theta^\prime})
+  \end{equation*}
 
-\begin{frame}[t]{Quick Overview of MAML}
-  \begin{block}{Meta-objective}
-    \begin{equation*}
-    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
-    \end{equation*}
-  \end{block}
-
-  \begin{itemize}
-    \item Use SGD with $D_k^{tr}$ as update rule (can be more steps)
-    \item Used SGD with independently-sampled $D_k^{test}$ to update the parameters
-  \end{itemize}
-
-  \vspace{1em}
-
-  Intuition: MAML explicitly optimized the loss of the \textbf{adapted} parameters
+  $\theta^\prime$: $\theta$ after adaptation (e.g some gradient steps) \\
+  \flushright \hyperlink{overview of maml}{\beamergotobutton{More detail}}
 \end{frame}
 
 \begin{frame}
 	\begin{center}
-    \LARGE{Proposed Approach}
+    \LARGE{Difference ?}
 	\end{center}
 \end{frame}
 
-\section{Proposed Approach}
+\begin{frame}[t]{Illustration: MultiASR}
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_illustration.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration: MetaASR}
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_illustration.png} 
+\end{frame}
+
+\begin{frame}[t]{MetaASR can bring...}
+  \begin{center}
+  The parameters found by MultiASR is not best for adaptation
+  \end{center}
+
+  \begin{itemize}
+    \item overall performance improvement (metric: CER)
+    \item less overfitting on source languages
+  \end{itemize}
+  \flushright \hyperlink{another example}{\beamergotobutton{Another example}}
+\end{frame}
+
+%\begin{frame}
+	%\begin{center}
+    %\LARGE{Proposed Approach}
+	%\end{center}
+%\end{frame}
+
+%\section{Proposed Approach}
 \begin{frame}[t]{Model Architecture}
   \center \includegraphics[width=0.55\textwidth]{fig/model_arch.png}
 \end{frame}
 
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
-  %\only<1-2> \center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
-  %\only<2-3> \center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
-  %\only<3> \center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
-\end{frame}
 
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
-\end{frame}
+%\begin{frame}
+	%\begin{center}
+    %\LARGE{In contrast to Multitask Training}
+	%\end{center}
+%\end{frame}
 
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
-\end{frame}
-
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient finished)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_before_update.png}
-\end{frame}
-
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 \textcolor{red}{Update}
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_update.png}
-\end{frame}
+%\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
+  %Multitask training (MultiASR) acts as main backbone in multilingual pretraining
+  %\vspace{2em}
+  %\begin{enumerate}
+    %\item Random draw one sample in one pretraining langauge \\ (either uniform sampling or $\propto$ corpus size)
+    %\item Update through SGD on that sample
+  %\end{enumerate}
+%\end{frame}
 
 \begin{frame}
 	\begin{center}
-    \LARGE{In contrast to Multitask Training}
+    \LARGE{Experiments}
 	\end{center}
 \end{frame}
 
-\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
-  Multitask training (MultiASR) acts as main backbone in multilingual pretraining
-  \vspace{2em}
-  \begin{enumerate}
-    \item Random draw one sample in one pretraining langauge \\ (either uniform sampling or $\propto$ corpus size)
-    \item Update through SGD on that sample
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}[t]{Illustration of 1 step in MultiASR}
-  Step 1 
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_step1.png}
-\end{frame}
-
-\begin{frame}[t]{Illustration of 1 step in MultiASR}
-  Step 2 
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_step2.png}
-\end{frame}
-
-\begin{frame}[t]{Illustration of 1 step in MultiASR}
-  Step 3 
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_step3.png}
-\end{frame}
-
 \section{Experimental Results}
-\begin{frame}[t]{Questions we care about}
-  \begin{enumerate}[<+->]
-    \item Is adaptation performance of MetaASR better than MultiASR ?
-    \item Is MetaASR avoid over-fitting on pretraining languages (unlike MultiASR)?
-    \item If MultiASR equipped with uniform sampling strategy (like MetaASR), is 2 still true?
-  \end{enumerate}
-\end{frame}
-
 \begin{frame}[t]{Experimental Setting}
   Corpus: IARPA-BABEL (Conversational Telephone Speech)
   \begin{itemize}
@@ -277,7 +243,7 @@
 \end{frame}
 
 \begin{frame}[t]{CER on FLP}
-  Refer to Question 1
+  %Refer to Question 1
   \center \includegraphics[width=1.0\textwidth]{fig/flp_hl1.png}
 
   \begin{itemize}
@@ -286,7 +252,7 @@
 \end{frame}
 
 \begin{frame}[t]{CER on FLP}
-  Refer to Question 1
+  %Refer to Question 1
   \center \includegraphics[width=1.0\textwidth]{fig/flp_hl2.png}
 
   \begin{itemize}
@@ -322,7 +288,7 @@
 \end{frame}
 
 \begin{frame}[t]{Learning Curve (dev cer on LLP)}
-  Pretraining Languages: Bn, Tl, Zu; Target Language: Sw
+  Pretraining Languages: Bn, Tl, Zu; Target Language: Sw $\,$ \hyperlink{lc}{\beamergotobutton{More learning curves}}
 
     \begin{figure}[H]
     \centering
@@ -351,7 +317,8 @@
   \begin{itemize}
     \item Adaptation using meta-learned parameter is beneficial
     \item Can be applied to different applications beyond ASR
-    \item Need more analysis of where the performance gain comes from
+    \item Need more analysis of where the performance gain comes from \\ (loss landscape, representation similarity ...) $\qquad \qquad$ \hyperlink{losslandscape}{\beamergotobutton{results}}
+    \item Need to examine on more (pretraining langauges, target langauge) pairs
   \end{itemize}
 \end{frame}
 
@@ -361,9 +328,62 @@
 	\end{center}
 \end{frame}
 
+\bibliographystyle{plainnat}
+\bibliography{M335}
+
+\begin{frame}
+	\begin{center}
+    \LARGE{Appendix}
+	\end{center}
+\end{frame}
+
 \section{Appendix}
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\subsection{CER on LLP}
 \begin{frame}[t]{CER on LLP}
   \center \includegraphics[width=1.0\textwidth]{fig/llp_table.png}
+\end{frame}
+
+\subsection{Quick overview of MAML}
+\begin{frame}[t]{Quick Overview of MAML}
+  \label{overview of maml}
+  \begin{block}{Goal}
+    Learn initialization parameters $\theta^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
+  \end{block}
+\end{frame}
+
+\begin{frame}[t]{Quick Overview of MAML}
+  \begin{block}{Meta-objective}
+    \begin{equation*}
+    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
+    \end{equation*}
+  \end{block}
+
+  \begin{itemize}
+    \item $\mathcal{L}_D$: Loss calculated on $D$
+    \item $D_k^{tr}$, $D_k^{test}$ are disjoint sets of $D_k$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Quick Overview of MAML}
+  \begin{block}{Meta-objective}
+    \begin{equation*}
+    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
+    \end{equation*}
+  \end{block}
+
+  \begin{itemize}
+    \item Use SGD with $D_k^{tr}$ as update rule (can be more steps)
+    \item Used SGD with independently-sampled $D_k^{test}$ to update the parameters
+  \end{itemize}
+
+  \vspace{1em}
+
+  Intuition: MAML explicitly optimized the loss of the \textbf{adapted} parameters
 \end{frame}
 
 \begin{frame}[t]{First Order Approximation - FOMAML}
@@ -381,7 +401,51 @@
   \end{block}
 \end{frame}
 
+\subsection{Update procedure}
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 (Collect gradient finished)
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_before_update.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  Step (Meta Episode) 1 \textcolor{red}{Update}
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_update.png}
+\end{frame}
+
+
+\begin{frame}[t]{Illustration of 1 step in MultiASR}
+  Step 1 
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_step1.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration of 1 step in MultiASR}
+  Step 2 
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_step2.png}
+\end{frame}
+
+\begin{frame}[t]{Illustration of 1 step in MultiASR}
+  Step 3 
+  \center \includegraphics[width=0.85\textwidth]{fig/multi_step3.png}
+\end{frame}
+
+\subsection{Toy example to show the difference between multitask/meta}
 \begin{frame}[t]{Difference between multitask/meta-learned parameter}
+\label{another example}
   Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
 
   \begin{equation*}
@@ -408,7 +472,6 @@
 
   \center $\boxed{w^\star_{\text{multi}} = - \bar{\mathbf{A}}^{-1}\bar{\mathbf{b}}}$
 \end{frame}
-
 \begin{frame}[t]{Difference between multitask/meta-learned parameter}
   Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
 
@@ -456,17 +519,16 @@
 
   \center $\boxed{w^\star_{\text{meta}} = - \tilde{\mathbf{A}}^{-1}\tilde{\mathbf{b}}}$
 \end{frame}
-
+\label{lc}
+\subsection{More learning curves}
 \begin{frame}[t]
   \vspace{-1em}
   \center \includegraphics[width=0.8\textwidth]{fig/dev_cer_all.png}
 \end{frame}
-
+\label{losslandscape}
+\subsection{Analysis: loss landscape}
 \begin{frame}[t]{Loss Landscape around Adapted Parameters}
   \center \includegraphics[width=1.0\textwidth]{fig/loss_landscape.png}
 \end{frame}
-
-\bibliographystyle{plainnat}
-\bibliography{M335}
 
 \end{document} 
