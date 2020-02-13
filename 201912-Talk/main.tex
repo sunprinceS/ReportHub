@@ -119,6 +119,12 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}[t]{MAML in a nutshell}
+  \begin{block}{Goal}
+    Learn initialization parameters $\theta^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
+  \end{block}
+  \flushright \hyperlink{overview of maml}{\beamergotobutton{More detail}}
+\end{frame}
 
 \begin{frame}[t]{Recap: Multilingual Transfer Learning}
 
@@ -137,6 +143,7 @@
   \vspace{3em}
   (instead of previously used multitask training)
 \end{frame}
+
 
 \begin{frame}[t]{Motivation}
 	\begin{center}
@@ -315,7 +322,7 @@
 
 \begin{frame}[t]{Conclusion \& Future Work}
   \begin{itemize}
-    \item Adaptation using meta-learned parameter is beneficial
+    \item Adaptation using meta-learned parameters is beneficial
     \item Can be applied to different applications beyond ASR
     \item Need more analysis of where the performance gain comes from \\ (loss landscape, representation similarity ...) $\qquad \qquad$ \hyperlink{losslandscape}{\beamergotobutton{results}}
     \item Need to examine on more (pretraining langauges, target langauge) pairs
@@ -349,14 +356,9 @@
 \end{frame}
 
 \subsection{Quick overview of MAML}
-\begin{frame}[t]{Quick Overview of MAML}
-  \label{overview of maml}
-  \begin{block}{Goal}
-    Learn initialization parameters $\theta^\star$, such that performing few gradient steps during meta-test time (adaptation) can minimize loss on $D_t$
-  \end{block}
-\end{frame}
 
 \begin{frame}[t]{Quick Overview of MAML}
+  \label{overview of maml}
   \begin{block}{Meta-objective}
     \begin{equation*}
     \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
