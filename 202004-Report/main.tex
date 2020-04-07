@@ -151,6 +151,13 @@
   TCML: 就是 SNAIL
 \end{frame}
 
+\begin{frame}
+	\begin{center}
+    %\weib{\LARGE{謝謝聆聽！}}
+    \LARGE{Domain Generalization in Meta Learning}
+	\end{center}
+\end{frame}
+
 \section{Domain Generalization in Meta Learning}
 
 \begin{frame}{Formulation}
@@ -265,7 +272,7 @@
 \end{frame}
 
 \begin{frame}{Part3: Fine-tune (Meta-test)}
-  Retrain the model with one $F-D$ pair with $R_\phi$ as initial param
+  Repretrain the model with one $F-D$ pair with $R_\phi$ as initial param, then fine-tune on target task
 \end{frame}
 
 \begin{frame}
@@ -307,8 +314,8 @@
     Note: $\psi_b$, $\psi_{\text{random}}$(?) is fixed when updating $\theta$
 \end{frame}
 
-\begin{frame}[t]{Part2: Episodic training for target network $\psi$}
-  Want to learn target network that can process feature embedding for $x$ from $a$ domain using $b$ domain's feature extractor
+\begin{frame}[t]{Part2: Episodic training for task network $\psi$}
+  Want to learn task network that can process feature embedding for $x$ from $a$ domain using $b$ domain's feature extractor
 
   \begin{equation*}
     \arg \min_\theta \mathbb{E}_{ a \neq b} [\mathbb{E}_{(x,y) \sim \mathcal{D}_a}(y, {\color{red}{\psi}}(\theta_b(x)))] 
