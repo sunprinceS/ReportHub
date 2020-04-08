@@ -263,7 +263,10 @@
     \begin{enumerate}
       \item sample 2 domains $a,b$
       \item initialize $\theta_{\text{new}}^0 \leftarrow \theta_a$
-      \item Update many steps using batches in $a$ with $R(\phi)$\\
+      \item Update many steps using batches in $a$ with $R_\phi$\\
+      %\begin{equation*}
+        %R_\phi = \sum_i \phi_i ||\theta_i||
+      %\end{equation*}
         $\theta_{\text{new}}^t \leftarrow \theta_{\text{new}}^{t-1} - \alpha \nabla_{\theta_{\text{new}}^{t-1}}[L^{(a)}(\theta_{\text{new}}^{t-1}) + {\color{red}{R_\phi}(\theta_{\text{new}}^{t-1})}]$
       \item Update $\phi$ using batches in $b$\\
         $\phi \leftarrow \phi - \alpha \nabla_\phi L^{(b)}(\theta^T_{\text{new}})$
@@ -272,7 +275,7 @@
 \end{frame}
 
 \begin{frame}{Part3: Fine-tune (Meta-test)}
-  Repretrain the model with one $F-D$ pair with $R_\phi$ as initial param, then fine-tune on target task
+  Repretrain the model with one $F-T$ pair with $R_\phi$ as initial param, then fine-tune on target task
 \end{frame}
 
 \begin{frame}
