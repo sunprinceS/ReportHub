@@ -55,11 +55,15 @@
 
 \title{Meta-Learning for\\ End-to-End Low-Resouce Speech Recognition}
 \subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{National Taiwan University \\ Speech Processing \& Machine Learning Laboratory}}}
-\author{Jui-Yang Hsu, Yuan-Jui Chen, Hung-yi Lee}
+\author{\textbf{Jui-Yang Hsu}, Yuan-Jui Chen, Hung-yi Lee}
 \date{\today}
 \begin{document}
 
 \begin{frame}
+  \tikz [remember picture,overlay]
+    \node at
+        ([xshift=-4.5cm, yshift=2cm]current page.south)
+        {\includegraphics[width=0.2\textwidth,height=.3\textheight]{fig/me.JPG}};
 \maketitle
 \end{frame}
 
@@ -128,7 +132,7 @@
       \item The process of forwarding $D_t$ to get $\theta$
       \item Conventional supervised learning we know
       \begin{itemize}
-        \item Train: use some knowledge from $\mathcal{M}$ to learn (\textbf{adaptation})
+        \item Train: use some knowledge from $\mathcal{M}$ to learn $\theta$ (\textbf{adaptation})
         \item Test: evaluate the final performance
       \end{itemize}
     \end{itemize}
@@ -174,13 +178,13 @@
 \end{frame}
 
 \begin{frame}[t]{What we meta-learn for?}
-  \centering Meta-learn \textcolor{navy}{parameter initialization} \\ to improve learn \textcolor{tomato}{End-to-End Speech Recognition}
+  \centering Meta-learn \textcolor{navy}{parameter initialization} \\ to improve learn \textcolor{tomato}{End-to-End Speech Recognition} \\
+  (view different languages as different tasks)
 
   \pause
   \flushleft How to meta-learn \textcolor{navy}{parameter initialization}?
   \begin{itemize}
     \item Model-Agnostic Meta-Learning (MAML) (\citealt{finn2017model})
-    \item View different languages as different tasks
   \end{itemize}
 
   \pause
@@ -224,6 +228,13 @@
   
 \end{frame}
 
+\begin{frame}[t]{Recap: Multilingual Transfer Learning}
+
+  \begin{enumerate}
+    \item Pretraining (Multilingual Training) \\ learn good \textbf{initialization for adaptation} on source langauges
+    \item Adaptation (Fine-tune) \\ use the learned initialization to adapt on target language
+  \end{enumerate}
+\end{frame}
 \begin{frame}[t]{Recap: Multilingual Transfer Learning}
 
   \begin{enumerate}
@@ -316,8 +327,8 @@
   \pause
   Languages:
   \begin{itemize}
-    \item Source: Bengali (Bn), Tagalog (Tl), Zulu (Zu), Turkish (Tr), Telugu (Te), Lithuanian (Lt)
-    \item Target: Vietnamese (Vi), Swahili (Sw), Tamil (Ta), Kurmanji (Ku)
+    \item Source $\boxed{\text{meta-train}}$\\ Bengali (Bn), Tagalog (Tl), Zulu (Zu), Turkish (Tr), Telugu (Te), Lithuanian (Lt)
+    \item Target $\boxed{\text{meta-test}}$ \\Vietnamese (Vi), Swahili (Sw), Tamil (Ta), Kurmanji (Ku)
     \item Validation: Cross-validation
   \end{itemize}
 \end{frame}
@@ -384,7 +395,7 @@
 \end{frame}
 
 \begin{frame}[t]{Learning Curve (dev cer on LLP)}
-  Pretraining Languages: Bn, Tl, Zu; Target Language: Vi
+  Source Languages: Bn, Tl, Zu; Target Language: Vi
 
     \begin{figure}[H]
     \centering
@@ -413,7 +424,7 @@
 \end{frame}
 
 \begin{frame}[t]{Learning Curve (dev cer on LLP)}
-  Pretraining Languages: Bn, Tl, Zu; Target Language: Sw $\,$ \hyperlink{lc}{\beamergotobutton{More learning curves}}
+  Source Languages: Bn, Tl, Zu; Target Language: Sw $\,$ \hyperlink{lc}{\beamergotobutton{More learning curves}}
 
     \begin{figure}[H]
     \centering
@@ -450,7 +461,7 @@
 
 \begin{frame}
 	\begin{center}
-    \LARGE{Discussion}
+    \LARGE{Thank you}
 	\end{center}
 \end{frame}
 
