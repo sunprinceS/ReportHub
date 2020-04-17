@@ -12,6 +12,9 @@
 \usepackage{color}
 \usepackage{booktabs}
 \usepackage{tabularx}
+%\usepackage{amsmath}
+%\usepackage{empheq}
+%\usepackage[most]{tcolorbox}
 \usepackage{caption}
 \usepackage{tikz}
 \usepackage{graphicx}
@@ -51,7 +54,7 @@
 
 
 \title{Meta-Learning for\\ End-to-End Low-Resouce Speech Recognition}
-\subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{National Taiwan University}}}
+\subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{National Taiwan University \\ Speech Processing \& Machine Learning Laboratory}}}
 \author{Jui-Yang Hsu, Yuan-Jui Chen, Hung-yi Lee}
 \date{\today}
 \begin{document}
@@ -70,15 +73,66 @@
 
 \begin{frame}[t]{Meta Learning: Learning to Learn}
   \begin{block}{Goal}
-    Fast adaptation on unseen task $D_t$ from a set of pretraining tasks $\{ D_k\}^{K}_{k=1}$ 
+    Learn a model that can learn fast and well
+    \begin{itemize}
+      \item Fast: sample-efficient
+      \item Well: converge to good performance
+    \end{itemize}
   \end{block}
 
+  %\pause 
+
+  %\begin{itemize}
+    %\item Assumption: tasks are inherently related (inductive transfer is beneficial)
+    %\item Definition of task $D_k$: depend on application
+  %\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]{Comparison with Supervised Learning}
+  In supervised learning, we have a dataset $D = \lbrace (x,y) \rbrace$, we train a model $M_\theta$ that can 
+  \center \includegraphics[width=0.85\textwidth]{fig/sup_learning.png}
+\end{frame}
+
+\begin{frame}[t]{Comparison with Supervised Learning}
+  In meta learning, we have a dataset of datasets (aka, dataset distribution) $\mathcal{D} = \lbrace D_1, D_2, \cdots D_k \rbrace$, we train a model $\mathcal{M}$ that can
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_learning.png}
+
+  Each $D$ is not large (few-shot, low-resource)
+\end{frame}
+
+\begin{frame}[t]{Meta Learning: Learning to Learn}
+  \begin{block}{Goal}
+    Fast adaptation on unseen task $D_t$ from a set of tasks $\{ D_k\}^{K}_{k=1}$ 
+  \end{block}
   \pause 
 
   \begin{itemize}
-    \item Assumption: tasks are inherently related (inductive transfer is beneficial)
-    \item Definition of task $D_k$: depend on application
+    \item Assumption: tasks are inherently related (knowledge transfer between tasks is beneficial)
   \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Two stages in meta-learning: Meta-train}
+  \begin{block}{Meta-train}
+    \begin{itemize}
+      \item Use $\{ D_k \}^{K}_{k=1}$ to get $\mathcal{M}$
+      \item Train: use training set in each $D_k$ to \textbf{inner-loop learn}
+      \item Test: use testing set in each $D_k$ to inner-loop test
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[t]{Two stages in meta-learning: Meta-test}
+  \begin{block}{Meta-test}
+    \begin{itemize}
+      \item The process of forwarding $D_t$ to get $\theta$
+      \item Conventional supervised learning we know
+      \begin{itemize}
+        \item Train: use some knowledge from $\mathcal{M}$ to learn (\textbf{adaptation})
+        \item Test: evaluate the final performance
+      \end{itemize}
+    \end{itemize}
+  \end{block}
 \end{frame}
 
 \begin{frame}[t]{What we meta-learn for?}
@@ -105,6 +159,18 @@
     \item Dialogue Generation (\citealt{mi2019meta})
     \item Speaker-Adaptative Training (\citealt{klejch2019speaker})
   \end{itemize}
+
+\end{frame}
+
+\begin{frame}[t]{Definition of task/dataset $D_k$}
+  \begin{center}
+    \LARGE{Depend on application}
+  \end{center}
+    \begin{itemize}
+      \item Speaker Adaptative Training: User/Speaker
+      \item Machine Translation: Language
+      \item Dialogue Generation: Domain
+    \end{itemize}
 \end{frame}
 
 \begin{frame}[t]{What we meta-learn for?}
@@ -114,7 +180,7 @@
   \flushleft How to meta-learn \textcolor{navy}{parameter initialization}?
   \begin{itemize}
     \item Model-Agnostic Meta-Learning (MAML) (\citealt{finn2017model})
-    \item View different languages' as different tasks
+    \item View different languages as different tasks
   \end{itemize}
 
   \pause
@@ -126,6 +192,7 @@
   \end{itemize}
 \end{frame}
 
+\section{Proposed Approach}
 \begin{frame}[t]{MAML in a nutshell}
   \begin{block}{Goal}
     Learn initialization parameters $\theta^\star$, such that performing \textbf{few gradient steps} during meta-test time (adaptation) can minimize loss on $D_t$
@@ -133,53 +200,66 @@
   \flushright \hyperlink{overview of maml}{\beamergotobutton{More detail}}
 \end{frame}
 
+\begin{frame}{Proposed Training Scheme: MetaASR}
+	%\begin{center}
+    %\LARGE{MAML training (MetaASR)}
+	%\end{center}
+  %\vspace{3em}
+  %$\rightarrow$ find parameters best \textbf{after adaptation} on all source langauges
+  Find parameters best \textbf{after inner-loop learn} on all source langauges
+
+  \begin{equation*}
+    \theta_{\text{meta}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\textcolor{red}{\theta^\prime})
+  \end{equation*}
+  \begin{itemize}
+    \item $\theta^\prime$: $\theta$ after inner-loop learn (e.g one gradient step)
+    \begin{equation*}
+      \theta^\prime = \theta - \nabla_\theta \mathcal{L}_{D_k}(\theta)
+    \end{equation*}
+    \item $\mathcal{L}_D$: loss calculated on $D$, used in inner-loop test
+  \end{itemize}
+  
+  %\flushright \hyperlink{overview of maml}{\beamergotobutton{More detail}}
+  Then use $\theta^\star_{\text{meta}}$ to adapt on $D_t$
+  
+\end{frame}
+
 \begin{frame}[t]{Recap: Multilingual Transfer Learning}
 
   \begin{enumerate}
-    \item Pretraining (Multilingual Training): \\ learn good \textbf{initialization for adaptation} on source langauges
-    \item Adaptation: \\ use the learned initialization to adapt on target language
+    \item Pretraining (Multilingual Training) $\boxed{\text{meta-train}}$ \\ learn good \textbf{initialization for adaptation} on source langauges
+    \item Adaptation (Fine-tune) $\boxed{\text{meta-test}}$ \\ use the learned initialization to adapt on target language
   \end{enumerate}
 \end{frame}
 
-\section{Proposed Approach}
-\begin{frame}[t]{Idea}
-	\begin{center}
-    \LARGE{We apply MAML in Pretraining stage}
-	\end{center}
+%\begin{frame}[t]{Idea}
+	%\begin{center}
+    %\LARGE{We apply MAML in Pretraining stage}
+	%\end{center}
 
-  \vspace{3em}
-  (instead of previously used multitask training)
-\end{frame}
+  %\vspace{3em}
+  %(instead of previously used multitask training)
+%\end{frame}
 
 
-\begin{frame}[t]{Motivation}
-	\begin{center}
-    \LARGE{Multitask training (MultiASR)}
-	\end{center}
-  \vspace{3em}
-  $\rightarrow$ find parameters best for all source langauges
+\begin{frame}[t]{Multitask Training Scheme: MultiASR}
+	%\begin{center}
+    %\LARGE{Multitask training (MultiASR)}
+	%\end{center}
+  %\vspace{3em}
+  Find parameters best for all source langauges during pretraining\\ (w/o considering adaptation afterwards)
 
   \begin{equation*}
     \theta_{\text{multi}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\theta)
   \end{equation*}
 
-  $\mathcal{L}_D$: loss calculated on $D$
+  Then use $\theta^\star_{\text{multi}}$ to adapt on $D_t$
+
 \end{frame}
 
-\begin{frame}[t]{Motivation}
-	\begin{center}
-    \LARGE{MAML training (MetaASR)}
-	\end{center}
-  \vspace{3em}
-  $\rightarrow$ find parameters best \textbf{after adaptation} on all source langauges
 
-  \begin{equation*}
-    \theta_{\text{meta}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\textcolor{red}{\theta^\prime})
-  \end{equation*}
-
-  $\theta^\prime$: $\theta$ after adaptation (e.g some gradient steps) \\
-  \flushright \hyperlink{overview of maml}{\beamergotobutton{More detail}}
-\end{frame}
+%\begin{frame}[t]{Motivation}
+%\end{frame}
 
 \begin{frame}
 	\begin{center}
@@ -187,56 +267,43 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}[t]{Illustration: MultiASR}
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_illustration.png}
-\end{frame}
-
 \begin{frame}[t]{Illustration: MetaASR}
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_illustration.png} 
+  \begin{picture}(100,230)
+  \put(25,40){\includegraphics[width=0.85\textwidth]{fig/meta_illustration.png}}
+  \put(75,220){$\boxed{\theta_{\text{meta}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\textcolor{red}{\theta^\prime})}$}
+  \end{picture}
 \end{frame}
 
-\begin{frame}[t]{MetaASR can bring...}
-  \begin{center}
-  The parameters found by MultiASR is not best for adaptation
-  \end{center}
+\begin{frame}[t]{Illustration: MultiASR}
+  \begin{picture}(100,230)
+  \put(25,40){\includegraphics[width=0.85\textwidth]{fig/multi_illustration.png}}
+  \put(75,220){$\boxed{\theta_{\text{multi}}^\star = \arg \min_\theta \sum_k \mathcal{L}_{D_k}(\theta)}$}
+  \end{picture}
+\end{frame}
 
+
+% TODO
+\begin{frame}[t]{Benefits of MetaASR}
+  \center{Consider adaptation process in its objective,\\ make train/test scenario more aligned}
+  %\begin{center}
+  %The parameters found by MultiASR is not best for adaptation
+  %\end{center}
+  \vspace{2em}
+  \begin{block}{Metric}
   \begin{itemize}
-    \item overall performance improvement (metric: CER)
-    \item less overfitting on source languages
+    \item Overall performance improvement (e.g lower error rate)
+    \item Less overfitting on source languages
   \end{itemize}
   \flushright \hyperlink{another example}{\beamergotobutton{Another example}}
+  \end{block}
 \end{frame}
 
-%\begin{frame}
-	%\begin{center}
-    %\LARGE{Proposed Approach}
-	%\end{center}
-%\end{frame}
 
 \begin{frame}
 	\begin{center}
     \LARGE{Experiments}
 	\end{center}
 \end{frame}
-\begin{frame}[t]{Model Architecture}
-  \center \includegraphics[width=0.55\textwidth]{fig/model_arch.png}
-\end{frame}
-
-
-%\begin{frame}
-	%\begin{center}
-    %\LARGE{In contrast to Multitask Training}
-	%\end{center}
-%\end{frame}
-
-%\begin{frame}[t]{Baseline: Multitask Training (MultiASR)}
-  %Multitask training (MultiASR) acts as main backbone in multilingual pretraining
-  %\vspace{2em}
-  %\begin{enumerate}
-    %\item Random draw one sample in one pretraining langauge \\ (either uniform sampling or $\propto$ corpus size)
-    %\item Update through SGD on that sample
-  %\end{enumerate}
-%\end{frame}
 
 
 \section{Experimental Results}
@@ -255,9 +322,15 @@
   \end{itemize}
 \end{frame}
 
+\subsection{Overall performance improvement}
+\begin{frame}
+	\begin{center}
+    \LARGE{Overall performance improvement}
+	\end{center}
+\end{frame}
 \begin{frame}[t]{CER on FLP}
   %Refer to Question 1
-  \center \includegraphics[width=1.0\textwidth]{fig/flp_hl1.png}
+  \center \includegraphics[width=1.0\textwidth]{fig/flp-hl1.png}
 
   \begin{itemize}
     \item Adaptation from MetaASR performs better than random initialization
@@ -266,7 +339,7 @@
 
 \begin{frame}[t]{CER on FLP}
   %Refer to Question 1
-  \center \includegraphics[width=1.0\textwidth]{fig/flp_hl2.png}
+  \center \includegraphics[width=1.0\textwidth]{fig/flp-hl2.png}
 
   \begin{itemize}
     \item Adaptation from MetaASR performs better than random initialization
@@ -274,18 +347,26 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Learning Curve (dev cer on LLP)}
-  Pretraining Languages: Bn, Tl, Zu; Target Language: Vi
+
+\subsection{Less overfitting on source languages}
+\begin{frame}
+	\begin{center}
+    \LARGE{Less overfitting on source languages}
+	\end{center}
+\end{frame}
+\begin{frame}[t]{Learning Curve}
+  Each point means: pretrain $x$ steps on pretraining languages, \\then use the obtained parameters  to adapt on target language \\and get $y$ (CER) on its dev set
 
     \begin{figure}[H]
     \centering
-    \begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{tikzpicture}[trim axis left, trim axis right,
+      indicate/.style={->}]
 
     \begin{axis}[
-      width=1.0\linewidth,
-      height=0.5\linewidth,
-      legend entries={MetaASR, MultiASR, MultiASR (uniform), no-pretrain},
-      legend style={cells={anchor=west}, at={(0.3,-0.1)}, font=\tiny},
+      width=0.9\linewidth,
+      height=0.4\linewidth,
+      legend entries={MetaASR, MultiASR, no-pretrain},
+      legend style={cells={anchor=west}, at={(0.2,-0.15)}, font=\tiny},
       xlabel = {Pretraining steps ($\times 10^3$)},
           xmin=0,
           xmax=100,
@@ -293,9 +374,40 @@
           ylabel={CER}]
     \addplot+[smooth]table{stat/107-near3/fomaml-107-devcer};
     \addplot+[smooth]table{stat/107-near3/multi-107-devcer};
-    \addplot+[smooth]table{stat/107-near3/reptile-107-devcer};
+    %\addplot+[smooth]table{stat/107-near3/reptile-107-devcer};
     \addplot[style=ultra thick,dashed,] coordinates {(0,58.9) (100,58.9)};
     \end{axis}
+    %\node[draw,text width=1cm] at (0.8,0.2) {some };
+    %edge[indicate] \node [pos=0.6] (hello)
+    \end{tikzpicture}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Learning Curve (dev cer on LLP)}
+  Pretraining Languages: Bn, Tl, Zu; Target Language: Vi
+
+    \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[trim axis left, trim axis right,
+      indicate/.style={->}]
+
+    \begin{axis}[
+      width=1.0\linewidth,
+      height=0.5\linewidth,
+      legend entries={MetaASR, MultiASR, no-pretrain},
+      legend style={cells={anchor=west}, at={(0.2,-0.1)}, font=\tiny},
+      xlabel = {Pretraining steps ($\times 10^3$)},
+          xmin=0,
+          xmax=100,
+          grid=both,
+          ylabel={CER}]
+    \addplot+[smooth]table{stat/107-near3/fomaml-107-devcer};
+    \addplot+[smooth]table{stat/107-near3/multi-107-devcer};
+    %\addplot+[smooth]table{stat/107-near3/reptile-107-devcer};
+    \addplot[style=ultra thick,dashed,] coordinates {(0,58.9) (100,58.9)};
+    \end{axis}
+    %\node[draw,text width=1cm] at (0.8,0.2) {some };
+    %edge[indicate] \node [pos=0.6] (hello)
     \end{tikzpicture}
   \end{figure}
 \end{frame}
@@ -310,8 +422,8 @@
     \begin{axis}[
       width=1.0\linewidth,
       height=0.5\linewidth,
-      legend entries={MetaASR, MultiASR, MultiASR (uniform), no-pretrain},
-      legend style={cells={anchor=west}, at={(0.3,-0.1)}, font=\tiny},
+      legend entries={MetaASR, MultiASR, no-pretrain},
+      legend style={cells={anchor=west}, at={(0.2,-0.1)}, font=\tiny},
       xlabel = {Pretraining steps ($\times 10^3$)},
           xmin=0,
           xmax=100,
@@ -319,18 +431,19 @@
           ylabel={CER}]
     \addplot+[smooth]table{stat/107-near3/fomaml-202-devcer};
     \addplot+[smooth]table{stat/107-near3/multi-202-devcer};
-    \addplot+[smooth]table{stat/107-near3/reptile-202-devcer};
+    %\addplot+[smooth]table{stat/107-near3/reptile-202-devcer};
     \addplot[style=ultra thick,dashed,] coordinates {(0,42.1) (100,42.1)};
     \end{axis}
     \end{tikzpicture}
   \end{figure}
 \end{frame}
 
+\section{Conclusion}
 \begin{frame}[t]{Conclusion \& Future Work}
   \begin{itemize}
     \item Adaptation using meta-learned parameters is beneficial
     \item Can be applied to different applications beyond ASR
-    \item Need more analysis of where the performance gain comes from \\ (loss landscape, representation similarity ...) $\qquad \qquad$ \hyperlink{losslandscape}{\beamergotobutton{results}}
+    %\item Need more analysis of where the performance gain comes from \\ (loss landscape, representation similarity ...) $\qquad \qquad$ \hyperlink{losslandscape}{\beamergotobutton{results}}
     \item Need to examine on more (pretraining langauges, target langauge) pairs
   \end{itemize}
 \end{frame}
