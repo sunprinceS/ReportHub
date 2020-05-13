@@ -1,0 +1,66 @@
+\documentclass[12pt,UTF8,fntef]{article}
+\usepackage[left=1.8cm, right=1.8cm, top=1.8cm, bottom=1.8cm]{geometry}
+%\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage[unicode, pdfborder={0 0 0}, bookmarksdepth=-1]{hyperref}
+\usepackage[usenames, dvipsnames]{color}
+\usepackage[shortlabels, inline]{enumitem}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{spreadtab}
+\usepackage{booktabs}
+%\usepackage{cite}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{pgfplotstable}
+
+\pgfplotsset{width=15cm}
+\pgfplotsset{height=8cm}
+\pgfplotsset{compat=1.16}
+%\setcitestyle{numbers}
+
+\hypersetup{
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    %pdftitle={前瞻語音計畫申請},    % title
+    pdfauthor={Jui-Yang Hsu},     % author
+    pdfnewwindow=true,      % links in new PDF window
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=purple,          % color of internal links (change box color with linkbordercolor)
+    citecolor=blue,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+
+\usepackage[square,numbers]{natbib}
+%\bibliographystyle{abbrvnat}
+\renewcommand{\baselinestretch}{1.25}
+\usepackage{xeCJK}
+\usepackage{fontspec}
+%\setCJKmainfont{DFFN_R3.TTC}
+\setCJKmainfont[BoldFont=Noto Serif CJK TC Bold]{Noto Serif CJK TC}
+\title{博士論文研究大綱\\元學習於語音領域之發展}
+\author{電機工程研究所~~~計算機科學組\\R07921053~~~徐瑞陽 \\ \texttt{}https://sunprinces.github.io/portfolio/}
+%\email{r07921053@ntu.edu.tw}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+首先，我會先介紹何謂元學習、其適用的場合、及對其直觀的理解，接著簡述基於元學習的概念所衍生出的方法 (基於度量、基於模型設計、基於梯度優化)。
+
+接著，我們會進到基於梯度優化的元學習方法於少資源多語言語音辨識的初步實驗及結果。
+
+最後根據上述實驗所得到的一些觀察，我會接著介紹將上述方法用於少資源多腔調(accent)語音辨識的動機、實驗設計、想分析的現象，以及如何去改進原先的元學習方法。
+
+
+\end{document}

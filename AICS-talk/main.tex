@@ -33,11 +33,11 @@
 
 \setbeamertemplate{footline}{%
   \hbox{%
-    %\begin{beamercolorbox}[wd=.2\paperwidth,ht=3ex,dp=1.75ex,center]{author in head/foot}
-      %\insertauthor
-    %\end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.9\paperwidth,ht=3ex,dp=1.75ex,left]{section in head/foot}
-      $\; \;$ Meta Learning for End-to-End Low-Resource Speech Recognition (ICASSP 2020)
+    \begin{beamercolorbox}[wd=.2\paperwidth,ht=3ex,dp=1.75ex,center]{author in head/foot}
+      \insertauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.7\paperwidth,ht=3ex,dp=1.75ex,left]{section in head/foot}
+      $\; \;$ AICS talk: Meta Learning and Beyond in Speech Processing
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=3ex,dp=1.75ex,center]{number in head/foot}
       %\insertframenumber\ /\ \inserttotalframenumber
@@ -53,9 +53,9 @@
 \setbeamercovered{transparent}
 
 
-\title{Meta-Learning for\\ End-to-End Low-Resouce Speech Recognition}
+\title{Meta-Learning and Beyond in Speech Processing}
 \subtitle{\textcolor[rgb]{0.00,0.50,1.00}{{National Taiwan University \\ Speech Processing \& Machine Learning Laboratory}}}
-\author{\textbf{Jui-Yang Hsu}, Yuan-Jui Chen, Hung-yi Lee}
+\author{Jui-Yang Hsu}
 \date{\today}
 \begin{document}
 
@@ -65,6 +65,11 @@
         ([xshift=-4.5cm, yshift=2cm]current page.south)
         {\includegraphics[width=0.2\textwidth,height=.3\textheight]{fig/me.JPG}};
 \maketitle
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
 \end{frame}
 
 \section{Meta Learning}
@@ -107,7 +112,7 @@
 
 \begin{frame}[t]{Meta Learning: Learning to Learn}
   \begin{block}{Goal}
-    Fast adaptation on unseen task $D_t$ from a set of tasks $\{ D_k\}^{K}_{k=1}$ 
+    Fast adaptation on unseen task $D_t$ from a set of tasks $\{ D_k\}^{K}_{k=1}$ ($\mathcal{D}_{\text{meta-train}}$)
   \end{block}
   \pause 
 
@@ -119,9 +124,9 @@
 \begin{frame}[t]{Two stages in meta-learning: Meta-train}
   \begin{block}{Meta-train}
     \begin{itemize}
-      \item Use $\{ D_k \}^{K}_{k=1}$ to get $\mathcal{M}$
-      \item Train: use training set in each $D_k$ to \textbf{inner-loop learn}
-      \item Test: use testing set in each $D_k$ to inner-loop test
+      \item Use $\mathcal{D}_{\text{meta-train}}$ to get $\mathcal{M}$
+      \item Train: use training set in each $D$, $D_k^{\text{tr}}$, to \textbf{inner-loop learn}
+      \item Test: use testing set in each $D$, $D_k^{\text{test}}$, to inner-loop test
     \end{itemize}
   \end{block}
 \end{frame}
@@ -139,6 +144,64 @@
   \end{block}
 \end{frame}
 
+\begin{frame}[t]
+  \frametitle{3 Questions}
+
+  \begin{itemize}
+    \item How to use $\mathcal{D}_{\text{meta-train}}$ to optimize $\mathcal{M}$?
+    \item How to decide $\theta_i$ using $\mathcal{M}$ and $D_{i}^{\text{tr}}$?
+    \item What is $\mathcal{M}$?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Black-box Adaptation (Model-based methods)}
+  
+  \begin{itemize}
+      \item $\mathcal{M}$ is a function $\mathcal{M}(\cdot)$, can be instancialized by neural network
+    \item $\theta_i = \mathcal{M}(D_{i}^{\text{tr}})$
+    \item Find $\mathcal{M}$ to maximize $\sum_{D_i \in \mathcal{D}_{\text{meta-train}}}\sum_{(x,y)} \log M_{\theta_i}(y|x)$ 
+  \end{itemize}
+
+  %\center \includegraphics[width=0.85\textwidth]{fig/meta_learning.png}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Black-box Adaptation (Model-based methods)}
+  
+  \begin{itemize}
+    \item $\mathcal{M}$ is a function $\mathcal{M}(\cdot)$, can be instancialized by neural network
+    \item $\theta_i = \mathcal{M}(D_{i}^{\text{tr}})$
+    \item Find $\mathcal{M}$ to maximize $\sum_{D_i \in \mathcal{D}_{\text{meta-train}}}\sum_{(x,y)} \log M_{\theta_i}(y|x)$ 
+  \end{itemize}
+
+  \center \includegraphics[width=0.85\textwidth]{fig/meta_learning.png}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Optimization-based Methods}
+  \begin{itemize}
+    \item $\mathcal{M}$ is some prior knowledge for $M_\theta$ (network arch., hyper-param ...)
+    \item $\theta_i = \text{SGD}_{(\theta;\mathcal{M})}(D_{i}^{\text{tr}})$
+    \item Find $\mathcal{M}$ to maximize $\sum_{D_i \in \mathcal{D}_{\text{meta-train}}}\sum_{(x,y)} \log M_{\theta_i}(y|x)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Metric-based Methods}
+  \begin{itemize}
+    \item $\mathcal{M}$ is part of $M_\theta$, feature encoder
+    \item $\theta_i = \mathcal{M}$
+    \item Find $\mathcal{M}$ to maximize $\sum_{D_i \in \mathcal{D}_{\text{meta-train}}}\sum_{(x,y)} \log M_{\theta_i, \text{Nearest Neighbor}}(y|x)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+    \LARGE{We focus on optimization-based methods}
+	\end{center}
+\end{frame}
+
 \begin{frame}[t]{What we meta-learn for?}
   \centering Meta-learn \textcolor{navy}{X} to improve learn \textcolor{tomato}{Y}
   \pause
@@ -147,7 +210,6 @@
     \item parameter initialization
     \item optimization strategy (e.g optimizer)
     \item network architecture
-    \item distance metric
     \item hyper-parameter
   \end{itemize}
 \end{frame}
@@ -177,6 +239,14 @@
     \end{itemize}
 \end{frame}
 
+\section{Meta Learning in Low-Resource Multilingual ASR}
+
+\begin{frame}
+	\begin{center}
+    \LARGE{Meta Learning in Low-Resource Multilingual ASR}
+	\end{center}
+\end{frame}
+
 \begin{frame}[t]{What we meta-learn for?}
   \centering Meta-learn \textcolor{navy}{parameter initialization} \\ to improve learn \textcolor{tomato}{End-to-End Speech Recognition} \\
   (view different languages as different tasks)
@@ -196,7 +266,8 @@
   \end{itemize}
 \end{frame}
 
-\section{Proposed Approach}
+\subsection{Proposed Approach}
+
 \begin{frame}[t]{MAML in a nutshell}
   \begin{block}{Goal}
     Learn initialization parameters $\theta^\star$, such that performing \textbf{few gradient steps} during meta-test time (adaptation) can minimize loss on $D_t$
@@ -269,8 +340,6 @@
 \end{frame}
 
 
-%\begin{frame}[t]{Motivation}
-%\end{frame}
 
 \begin{frame}
 	\begin{center}
@@ -310,7 +379,7 @@
 \end{frame}
 
 
-\section{Experimental Results}
+\subsection{Experimental Results}
 \begin{frame}
 	\begin{center}
     \LARGE{Experiments}
@@ -333,7 +402,6 @@
   \end{itemize}
 \end{frame}
 
-\subsection{Overall performance improvement}
 \begin{frame}
 	\begin{center}
     \LARGE{Overall performance improvement}
@@ -359,7 +427,6 @@
 \end{frame}
 
 
-\subsection{Less overfitting on source languages}
 \begin{frame}
 	\begin{center}
     \LARGE{Less overfitting on source languages}
@@ -449,15 +516,86 @@
   \end{figure}
 \end{frame}
 
-\section{Conclusion}
-\begin{frame}[t]{Conclusion \& Future Work}
+\section{Meta Learning in Low-Resource Multi-Accent ASR}
+\begin{frame}
+	\begin{center}
+    \LARGE{Meta Learning in Low-Resource Multi-Accent ASR}
+	\end{center}
+\end{frame}
+
+\begin{frame}[t]
+  \frametitle{Motivation}
+
   \begin{itemize}
-    \item Adaptation using meta-learned parameters is beneficial
-    \item Can be applied to different applications beyond ASR
-    %\item Need more analysis of where the performance gain comes from \\ (loss landscape, representation similarity ...) $\qquad \qquad$ \hyperlink{losslandscape}{\beamergotobutton{results}}
-    \item Need to examine on more (pretraining langauges, target langauge) pairs
+    \item IARPA-BABEL is too noisy
+    \item Not conventional MAML setting (need re-init the last layer)
   \end{itemize}
 \end{frame}
+
+\subsection{Experimental Setting}
+\begin{frame}[t]{Experimental Setting}
+  Corpus: Common Voice english (collected by Mozilla)
+
+  \begin{itemize}
+    \item Only utterance with accent label
+    \item Totally 324 hr
+    \item 16 accents (e.g england, scotland, singapore...)
+  \end{itemize}
+
+  Model Arch.
+  \begin{itemize}
+    \item Transformer seq2seq
+    \item VGG-blstm ctc
+  \end{itemize}
+\end{frame}
+
+\subsection{Analysis of Learned Initialization}
+\begin{frame}[t]
+  \frametitle{Analysis of Learned Initialization}
+  \begin{itemize}
+    \item Representation similarity between before/after adaptation
+    \item Loss landscape around learned initialization
+      \begin{itemize}
+        \item Smooth slope
+        \item Traverse length
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Efficient Inner-Loop Learn}
+\begin{frame}[t]
+  \frametitle{Efficient Inner-Loop Learn}
+  \begin{itemize}
+    \item Map parameter space to low dimensional latent space, performing inner-loop learn in that space
+    \item Instead of adapting whole model, decide which part of model should be adapted automatically
+  \end{itemize}
+\end{frame}
+
+\subsection{Consider Furture Adaptation in Meta-train}
+\begin{frame}[t]
+  \frametitle{Consider Future Adaptation in Meta-train}
+  \begin{itemize}
+    \item Dataset distribution drift issue
+  \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}[t]
+  \frametitle{Conclusion}
+  \begin{itemize}
+    \item Use E2E ASR as base task, explore the limit of meta learning
+    \item Use insight gained above, apply meta learning beyond E2E ASR
+  \end{itemize}
+\end{frame}
+%\begin{frame}[t]{Conclusion \& Future Work}
+  %\begin{itemize}
+    %\item Adaptation using meta-learned parameters is beneficial
+    %\item Can be applied to different applications beyond ASR
+    %%\item Need more analysis of where the performance gain comes from \\ (loss landscape, representation similarity ...) $\qquad \qquad$ \hyperlink{losslandscape}{\beamergotobutton{results}}
+    %\item Need to examine on more (pretraining langauges, target langauge) pairs
+  %\end{itemize}
+%\end{frame}
 
 \begin{frame}
 	\begin{center}
@@ -480,192 +618,187 @@
 \end{frame}
 
 \section{Appendix}
-\begin{frame}
-\frametitle{Outline}
-\tableofcontents
-\end{frame}
+%\subsection{CER on LLP}
+%\begin{frame}[t]{CER on LLP}
+  %\center \includegraphics[width=1.0\textwidth]{fig/llp_table.png}
+%\end{frame}
 
-\subsection{CER on LLP}
-\begin{frame}[t]{CER on LLP}
-  \center \includegraphics[width=1.0\textwidth]{fig/llp_table.png}
-\end{frame}
+%\subsection{Quick overview of MAML}
 
-\subsection{Quick overview of MAML}
+%\begin{frame}[t]{Quick Overview of MAML}
+  %\label{overview of maml}
+  %\begin{block}{Meta-objective}
+    %\begin{equation*}
+    %\theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
+    %\end{equation*}
+  %\end{block}
 
-\begin{frame}[t]{Quick Overview of MAML}
-  \label{overview of maml}
-  \begin{block}{Meta-objective}
-    \begin{equation*}
-    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
-    \end{equation*}
-  \end{block}
+  %\begin{itemize}
+    %\item $\mathcal{L}_D$: Loss calculated on $D$
+    %\item $D_k^{tr}$, $D_k^{test}$ are disjoint sets of $D_k$
+  %\end{itemize}
+%\end{frame}
 
-  \begin{itemize}
-    \item $\mathcal{L}_D$: Loss calculated on $D$
-    \item $D_k^{tr}$, $D_k^{test}$ are disjoint sets of $D_k$
-  \end{itemize}
-\end{frame}
+%\begin{frame}[t]{Quick Overview of MAML}
+  %\begin{block}{Meta-objective}
+    %\begin{equation*}
+    %\theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
+    %\end{equation*}
+  %\end{block}
 
-\begin{frame}[t]{Quick Overview of MAML}
-  \begin{block}{Meta-objective}
-    \begin{equation*}
-    \theta^\star = \arg \min_\theta \frac{1}{K}\sum_{k=1}^{K}\mathcal{L}_{D_k^{test}}(\theta - \alpha \nabla_\theta \mathcal{L}_{D_k^{tr}}(\theta))
-    \end{equation*}
-  \end{block}
+  %\begin{itemize}
+    %\item Use SGD with $D_k^{tr}$ as update rule (can be more steps)
+    %\item Used SGD with independently-sampled $D_k^{test}$ to update the parameters
+  %\end{itemize}
 
-  \begin{itemize}
-    \item Use SGD with $D_k^{tr}$ as update rule (can be more steps)
-    \item Used SGD with independently-sampled $D_k^{test}$ to update the parameters
-  \end{itemize}
+  %\vspace{1em}
 
-  \vspace{1em}
+  %Intuition: MAML explicitly optimized the loss of the \textbf{adapted} parameters
+%\end{frame}
 
-  Intuition: MAML explicitly optimized the loss of the \textbf{adapted} parameters
-\end{frame}
+%\begin{frame}[t]{First Order Approximation - FOMAML}
+  %To avoid computation and memory burden when calculating higher order gradients
+  %\begin{block}{Original Meta-Update}
+    %\begin{equation*}
+      %\theta \leftarrow \theta - \eta \sum_k \nabla_\theta \mathcal{L}_{D^{test}_k}(\theta^\prime)
+    %\end{equation*}
+  %\end{block}
+  %\begin{block}{Approximated Meta-Update}
+    %\begin{equation*}
+      %\theta \leftarrow \theta - \eta \sum_k \nabla_{\textcolor{red}{\theta^\prime}} \mathcal{L}_{D^{test}_k}(\theta^\prime)
+    %\end{equation*}
+    %\center where $\theta^\prime = \theta - \alpha \nabla_\theta \mathcal{L}_{D^{tr}_k} (\theta)$
+  %\end{block}
+%\end{frame}
 
-\begin{frame}[t]{First Order Approximation - FOMAML}
-  To avoid computation and memory burden when calculating higher order gradients
-  \begin{block}{Original Meta-Update}
-    \begin{equation*}
-      \theta \leftarrow \theta - \eta \sum_k \nabla_\theta \mathcal{L}_{D^{test}_k}(\theta^\prime)
-    \end{equation*}
-  \end{block}
-  \begin{block}{Approximated Meta-Update}
-    \begin{equation*}
-      \theta \leftarrow \theta - \eta \sum_k \nabla_{\textcolor{red}{\theta^\prime}} \mathcal{L}_{D^{test}_k}(\theta^\prime)
-    \end{equation*}
-    \center where $\theta^\prime = \theta - \alpha \nabla_\theta \mathcal{L}_{D^{tr}_k} (\theta)$
-  \end{block}
-\end{frame}
+%\subsection{Update procedure}
+%\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  %Step (Meta Episode) 1 (Collect gradient)
+  %\center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
+%\end{frame}
 
-\subsection{Update procedure}
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_step1.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  %Step (Meta Episode) 1 (Collect gradient)
+  %\center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
+%\end{frame}
 
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_step2.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  %Step (Meta Episode) 1 (Collect gradient)
+  %\center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
+%\end{frame}
 
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_step3.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  %Step (Meta Episode) 1 (Collect gradient finished)
+  %\center \includegraphics[width=0.85\textwidth]{fig/meta_before_update.png}
+%\end{frame}
 
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 (Collect gradient finished)
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_before_update.png}
-\end{frame}
-
-\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
-  Step (Meta Episode) 1 \textcolor{red}{Update}
-  \center \includegraphics[width=0.85\textwidth]{fig/meta_update.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 meta episode in MetaASR}
+  %Step (Meta Episode) 1 \textcolor{red}{Update}
+  %\center \includegraphics[width=0.85\textwidth]{fig/meta_update.png}
+%\end{frame}
 
 
-\begin{frame}[t]{Illustration of 1 step in MultiASR}
-  Step 1 
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_step1.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 step in MultiASR}
+  %Step 1 
+  %\center \includegraphics[width=0.85\textwidth]{fig/multi_step1.png}
+%\end{frame}
 
-\begin{frame}[t]{Illustration of 1 step in MultiASR}
-  Step 2 
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_step2.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 step in MultiASR}
+  %Step 2 
+  %\center \includegraphics[width=0.85\textwidth]{fig/multi_step2.png}
+%\end{frame}
 
-\begin{frame}[t]{Illustration of 1 step in MultiASR}
-  Step 3 
-  \center \includegraphics[width=0.85\textwidth]{fig/multi_step3.png}
-\end{frame}
+%\begin{frame}[t]{Illustration of 1 step in MultiASR}
+  %Step 3 
+  %\center \includegraphics[width=0.85\textwidth]{fig/multi_step3.png}
+%\end{frame}
 
-\subsection{Toy example to show the difference between multitask/meta}
-\begin{frame}[t]{Difference between multitask/meta-learned parameter}
-\label{another example}
-  Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
+%\subsection{Toy example to show the difference between multitask/meta}
+%\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+%\label{another example}
+  %Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
 
-  \begin{equation*}
-    f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
-  \end{equation*}
-
-  Want: minimize $f_k(\mathbf{w})$
-\end{frame}
-
-\begin{frame}[t]{Difference between multitask/meta-learned parameter}
-  Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
-
-  \begin{equation*}
-    f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
-  \end{equation*}
+  %\begin{equation*}
+    %f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
+  %\end{equation*}
 
   %Want: minimize $f_k(\mathbf{w})$
-  For multitask learner, it's equivalent to minimize $F(\mathbf{w})$
+%\end{frame}
 
-  \begin{equation*}
-    F(\mathbf{w}) =  \frac{1}{2} \mathbf{w}^T \bar{\mathbf{A}} \mathbf{w} + \mathbf{w}^T \bar{\mathbf{b}}
-  \end{equation*}
-  where $\bar{\mathbf{A}} = \frac{1}{K}\sum_k \mathbf{A}_k$, $\bar{\mathbf{b}} = \frac{1}{K}\sum_k \mathbf{b}_k$
+%\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  %Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
 
-  \center $\boxed{w^\star_{\text{multi}} = - \bar{\mathbf{A}}^{-1}\bar{\mathbf{b}}}$
-\end{frame}
-\begin{frame}[t]{Difference between multitask/meta-learned parameter}
-  Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
+  %\begin{equation*}
+    %f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
+  %\end{equation*}
 
-  \begin{equation*}
-    f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
-  \end{equation*}
+  %%Want: minimize $f_k(\mathbf{w})$
+  %For multitask learner, it's equivalent to minimize $F(\mathbf{w})$
 
-  %Want: minimize $f_k(\mathbf{w})$
-  For meta learner (MAML with 1 gradient step), it's equivalent to minimize
+  %\begin{equation*}
+    %F(\mathbf{w}) =  \frac{1}{2} \mathbf{w}^T \bar{\mathbf{A}} \mathbf{w} + \mathbf{w}^T \bar{\mathbf{b}}
+  %\end{equation*}
+  %where $\bar{\mathbf{A}} = \frac{1}{K}\sum_k \mathbf{A}_k$, $\bar{\mathbf{b}} = \frac{1}{K}\sum_k \mathbf{b}_k$
 
-  \begin{equation*}
-    F(\mathbf{w}) =  \frac{1}{K} \sum_k f_k(\mathbf{w} - \alpha \nabla f_k(\mathbf{w})) 
-  \end{equation*}
-\end{frame}
+  %\center $\boxed{w^\star_{\text{multi}} = - \bar{\mathbf{A}}^{-1}\bar{\mathbf{b}}}$
+%\end{frame}
+%\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  %Consider each task as quadratic function with different $(\mathbf{A}, \mathbf{b})$
 
-\begin{frame}[t]{Difference between multitask/meta-learned parameter}
-  \begin{block}{Objective}
-  \begin{equation*}
-    F(\mathbf{w}) =  \frac{1}{K} \sum_k f_k(\mathbf{w} - \alpha \nabla f_k(\mathbf{w})) 
-  \end{equation*}
-  \end{block}
+  %\begin{equation*}
+    %f_k(\mathbf{w}) = \frac{1}{2} \mathbf{w}^T \mathbf{A}_k \mathbf{w} + \mathbf{w}^T \mathbf{b}_k
+  %\end{equation*}
 
-    $f_k(\mathbf{w} - \alpha \nabla f_k (\mathbf{w})) = \frac{1}{2}(\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k)^T \mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k) + (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k) \mathbf{b}_k$
-    \vspace{1em}
+  %%Want: minimize $f_k(\mathbf{w})$
+  %For meta learner (MAML with 1 gradient step), it's equivalent to minimize
 
-    $\begin{aligned}
-      \nabla_\mathbf{w} f_k(\mathbf{w}^\prime) & = \big( \mathbf{I} - \alpha \mathbf{A}_k \big) \big(\mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w}-\alpha \mathbf{b}_k) + \mathbf{b}_k \big) \\
-                                               & = ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{A}_k ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{w} + (\mathbf{I} - \alpha \mathbf{A}_k)^2 \mathbf{b}_k
-    \end{aligned}$
-\end{frame}
+  %\begin{equation*}
+    %F(\mathbf{w}) =  \frac{1}{K} \sum_k f_k(\mathbf{w} - \alpha \nabla f_k(\mathbf{w})) 
+  %\end{equation*}
+%\end{frame}
 
-\begin{frame}[t]{Difference between multitask/meta-learned parameter}
-    $\begin{aligned}
-      \nabla_\mathbf{w} f_k(\mathbf{w}^\prime) & = \big( \mathbf{I} - \alpha \mathbf{A}_k \big) \big(\mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w}-\alpha \mathbf{b}_k) + \mathbf{b}_k \big) \\
-                                               & = ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{A}_k ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{w} + (\mathbf{I} - \alpha \mathbf{A}_k)^2 \mathbf{b}_k
-    \end{aligned}$
+%\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+  %\begin{block}{Objective}
+  %\begin{equation*}
+    %F(\mathbf{w}) =  \frac{1}{K} \sum_k f_k(\mathbf{w} - \alpha \nabla f_k(\mathbf{w})) 
+  %\end{equation*}
+  %\end{block}
 
-    \vspace{1em}
+    %$f_k(\mathbf{w} - \alpha \nabla f_k (\mathbf{w})) = \frac{1}{2}(\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k)^T \mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k) + (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w} - \alpha \mathbf{b}_k) \mathbf{b}_k$
+    %\vspace{1em}
 
-  For meta learner (MAML with 1 gradient step), it's equivalent to minimize
-  \begin{equation*}
-    F(\mathbf{w}) =  \frac{1}{2} \mathbf{w}^T \tilde{\mathbf{A}} \mathbf{w} + \mathbf{w}^T \tilde{\mathbf{b}}
-  \end{equation*}
-  where $\tilde{\mathbf{A}} = \frac{1}{K}\sum_k \big( \mathbf{I} - \alpha \mathbf{A}_k \big)^2 \mathbf{A}_k$, $\tilde{\mathbf{b}} = \frac{1}{K}\sum_k \big( \mathbf{I} - \alpha \mathbf{A}_k \big)^2\mathbf{b}_k$
+    %$\begin{aligned}
+      %\nabla_\mathbf{w} f_k(\mathbf{w}^\prime) & = \big( \mathbf{I} - \alpha \mathbf{A}_k \big) \big(\mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w}-\alpha \mathbf{b}_k) + \mathbf{b}_k \big) \\
+                                               %& = ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{A}_k ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{w} + (\mathbf{I} - \alpha \mathbf{A}_k)^2 \mathbf{b}_k
+    %\end{aligned}$
+%\end{frame}
 
-  \center $\boxed{w^\star_{\text{meta}} = - \tilde{\mathbf{A}}^{-1}\tilde{\mathbf{b}}}$
-\end{frame}
+%\begin{frame}[t]{Difference between multitask/meta-learned parameter}
+    %$\begin{aligned}
+      %\nabla_\mathbf{w} f_k(\mathbf{w}^\prime) & = \big( \mathbf{I} - \alpha \mathbf{A}_k \big) \big(\mathbf{A}_k (\mathbf{w} - \alpha \mathbf{A}_k \mathbf{w}-\alpha \mathbf{b}_k) + \mathbf{b}_k \big) \\
+                                               %& = ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{A}_k ( \mathbf{I} - \alpha \mathbf{A}_k ) \mathbf{w} + (\mathbf{I} - \alpha \mathbf{A}_k)^2 \mathbf{b}_k
+    %\end{aligned}$
+
+    %\vspace{1em}
+
+  %For meta learner (MAML with 1 gradient step), it's equivalent to minimize
+  %\begin{equation*}
+    %F(\mathbf{w}) =  \frac{1}{2} \mathbf{w}^T \tilde{\mathbf{A}} \mathbf{w} + \mathbf{w}^T \tilde{\mathbf{b}}
+  %\end{equation*}
+  %where $\tilde{\mathbf{A}} = \frac{1}{K}\sum_k \big( \mathbf{I} - \alpha \mathbf{A}_k \big)^2 \mathbf{A}_k$, $\tilde{\mathbf{b}} = \frac{1}{K}\sum_k \big( \mathbf{I} - \alpha \mathbf{A}_k \big)^2\mathbf{b}_k$
+
+  %\center $\boxed{w^\star_{\text{meta}} = - \tilde{\mathbf{A}}^{-1}\tilde{\mathbf{b}}}$
+%\end{frame}
 \label{lc}
 \subsection{More learning curves}
 \begin{frame}[t]
   \vspace{-1em}
   \center \includegraphics[width=0.8\textwidth]{fig/dev_cer_all.png}
 \end{frame}
-\label{losslandscape}
-\subsection{Analysis: loss landscape}
-\begin{frame}[t]{Loss Landscape around Adapted Parameters}
-  \center \includegraphics[width=1.0\textwidth]{fig/loss_landscape.png}
-\end{frame}
+%\label{losslandscape}
+%\subsection{Analysis: loss landscape}
+%\begin{frame}[t]{Loss Landscape around Adapted Parameters}
+  %\center \includegraphics[width=1.0\textwidth]{fig/loss_landscape.png}
+%\end{frame}
 
 \end{document} 
